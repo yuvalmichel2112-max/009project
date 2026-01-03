@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .seat-box{
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border: 2px solid #000000;
+            display: block;
+            font-weight: bold;
+        }
+
+        .seat-box input[type="checkbox"]{
+            display: none;
+        }
+        .seat-box:has(input:checked){
+            background-color: #ffff00;
+            border: 5px solid #000000;
+        }
+
+
+    </style>
+</head>
+<body>
+    <h1>Select Seats</h1>
+    <form action="/select_seats", method = "POST"
+          <table class="seat-table">
+              {% for r in range(1, rows+1) %}
+              <tr>
+                  {% for s in range(1, cols+1) %}
+                    {% set seat_id = r ~ "-" ~ s %}
+                    <td>
+                        {% if seat_id in occupied %}
+                            <div class="seat-box occupied">X</div>
+                        {% else %}
+                            <label class ="seat-box available">
+                                <input type="checkbox" name="seat_choice" value="{{seat_id}}">
+                                {{s}}
+                            </label>
+                        {%endif%}
+                    </td>
+                  {%endfor%}
+              </tr>
+              {%endfor%}
+          </table>
+        <input type = "submit" value = "SAVE BOOKING"
+    </form>
+</body>
+</html>
