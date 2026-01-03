@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Sign Up</h2>
+<form action ="/sign_up" method="POST">
+  <label> First Name</label>
+  <input type = "text" name ="first_name" placeholder="Your First Name" required><br>
+  <label> Last Name</label>
+  <input type = "text" name ="last_name" placeholder="Your Last Name" required><br>
+  <label> Date Of Birth</label>
+  <input type = "date" name ="date_of_birth" max="{{today}}" required><br>
+  <label> Email</label>
+  <input type = "email" name = "registered_email" placeholder = "israel123@mail.co.il" required><br>
+  <label> Passport Number</label>
+  <input type = "text" name ="passport_number" placeholder="87654321" minlength="8" maxlength="8" required><br>
+  <label> Phone Number</label>
+  <input type="text" name="phones_list" placeholder="050-0000000" minlength="10" maxlength="10" required><br>
+  <span id="Extra_Phone"></span><br>
+  <button type="button" onclick="addphone()">+ Add another phone number</button><br>
+  <input type = "hidden" name="date_of_registration" value="{{today}}"><br>
+  <label>Password </label>
+  <input type = "password" name="registered_password" placeholder="Create a password" required><br>
+  <input type="submit" value="Sign up">
+</form>
+
+<script>
+    function addphone() {
+        var container = document.getElementById("Extra_Phone");
+        var input = document.createElement("input");
+
+        input.type = "text";
+        input.name = "phone_list";
+        input.placeholder = "050-0000000";
+        input.minLength = "10";
+        input.maxLength = "10";
+
+        container.appendChild(input);
+
+        var br = document.createElement("br");
+        container.appendChild(br);
+    }
+    </script>
+</body>
+</html>
