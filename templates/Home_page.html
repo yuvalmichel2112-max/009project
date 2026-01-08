@@ -2,17 +2,169 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlyTAU | Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --light-eggplant: #5D3A76;
+            --deep-eggplant: #3B1E48;
+            --accent-orange: #FF8C00;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--light-eggplant) 0%, var(--deep-eggplant) 100%);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        .main-logo {
+            width: 120px; /* את יכולה לשנות את הגודל */
+            height: auto;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+        }
+
+        .main-logo:hover {
+            transform: scale(1.1) rotate(5deg); /* קצת "חיות" בלחיצה/מעבר עכבר */
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -1px;
+        }
+
+        h2 {
+            font-weight: 300;
+            margin-bottom: 40px;
+            opacity: 0.8;
+            font-size: 1.2rem;
+        }
+
+        form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .login-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        input[type="email"], input[type="password"] {
+            padding: 15px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: white;
+            color: #333;
+            width: 200px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 10px rgba(255, 140, 0, 0.2);
+        }
+
+        input[type="submit"] {
+            background-color: var(--accent-orange);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #e67e00;
+            transform: translateY(-2px);
+        }
+
+        .links-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 10px;
+        }
+
+        .links-row a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            opacity: 0.7;
+            transition: 0.3s;
+            border-bottom: 1px solid transparent;
+        }
+
+        .links-row a:hover {
+            opacity: 1;
+            border-bottom: 1px solid var(--accent-orange);
+        }
+
+        .manager-login-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 400;
+            opacity: 0.6;
+            padding: 10px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .manager-login-link:hover {
+            opacity: 1;
+            border-color: var(--accent-orange);
+            color: var(--accent-orange);
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
 </head>
 <body>
-  <h1> Welcome to FlyTAU!</h1>
-  <h2> log-in for registered costumers</h2>
-  <form action="/" method="POST">
-    <input type = "email" name = "registered_email" placeholder ="Email" required><br>
-    <input type = "password" name = "registered_password" placeholder = "password" required><br>
-    <input type = "submit" value="Log In"><br>
-    <a href="/?sign up">sign up</a><br>
-    <a href="/?flights">continue as guest</a>
+    <a href="/log_in_for_managers" class="manager-login-link">Admin Access</a>
+    <img src="{{ url_for('static', filename='images/FlyTAU-logo.png') }}" alt="FlyTAU Logo" class="main-logo">
+    <h1> Welcome to FlyTAU!</h1>
+    <h2> log-in for registered costumers</h2>
+    <form action="/" method="POST">
+    <div class="login-row">
+        <input type="email" name="registered_email" placeholder="Email" required>
+        <input type="password" name="registered_password" placeholder="password" required>
+        <input type="submit" value="Log In">
+    </div>
+
+    <div class="links-row">
+        <a href="/sign_up">sign up</a>
+        <a href="/search_flights">continue as guest</a>
+    </div>
   </form>
+
 </body>
 </html>

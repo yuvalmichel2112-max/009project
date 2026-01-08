@@ -20,13 +20,37 @@ def db_cur():
         cursor.close()
         conn.close()
 
-def get_airplane_dimensions(flight_id):
+def get_department_dimensions(flight_id, department_type):
     with db_cur() as cursor:
-        query = "SELECT a.rows, a.columns FROM airplane AS a JOIN flights AS f ON f.airplane_id = a.id WHERE f.id = %s"
-        cursor.execute(query,(flight_id,))
+        query = """
+            SELECT d.number_of_rows, d.number_of_columns 
+            FROM department AS d 
+            JOIN flights AS f ON f.airplane_id = d.airplane_id 
+            WHERE f.flight_id = %s AND d.department_type = %s
+        """
+        cursor.execute(query,(flight_id,department_type))
         result = cursor.fetchone()
         if result:
-            rows = result.get("rows",0)
-            columns = result.get("columns",0)
+            rows = result.get("number_of_rows",0)
+            columns = result.get("number_of_columns",0)
             return rows, columns
         return 0,0
+
+def get_occupied_seats(flight_id,department_type):
+    with db_cur as cursor:
+        query = "SELECT s.row_number, s.column_number FROM seats AS s WHERE s.status=occupied, flight_id=%s, department_type=%s "
+        cursor.execute(query, (flight_id,department_type))
+        occupied_seats = cursor.fetchall()
+        occupied = [f"{occupied_seats[0]}-{occupied_seats[1]}" for seat in occupied_seats]
+        return occupied
+
+def save_booking(email, selected_seats, flight_id):
+    seats_str = ", ".join(selected_seats)
+    with db_cur as cursor:
+        query = "INSERT INTO booking (email, seats_str, "
+
+
+def get_all_locations():
+    with db_cur as cursor:
+        cursor.execute("SELECT * FROM airport")
+        return cursor.fetchall
