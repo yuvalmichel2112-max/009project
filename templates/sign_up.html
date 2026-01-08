@@ -2,47 +2,212 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>FlyTAU | Sign Up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --deep-plum: #2E0249;
+            --mid-plum: #6a1b9a;
+            --vibrant-orange: #FF6B00;
+            --dark-purple: #1a091d;
+            --accent-orange: #FF8C00;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(-45deg, var(--deep-plum), var(--mid-plum), var(--vibrant-orange), var(--dark-purple));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            /* ----------------------- */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .form-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #fff, var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+        }
+
+        input {
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--accent-orange);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px dashed rgba(255, 255, 255, 0.5);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            transition: 0.3s;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--accent-orange);
+            color: var(--accent-orange);
+        }
+
+        input[type="submit"] {
+            grid-column: span 2;
+            background: linear-gradient(45deg, var(--accent-orange), #FF6B00);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.4s;
+            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.3);
+        }
+
+        input[type="submit"]:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(255, 107, 0, 0.5);
+        }
+
+        #Extra_Phone input {
+            margin-top: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 <body>
-<h2>Sign Up</h2>
-<form action ="/sign_up" method="POST">
-  <label> First Name</label>
-  <input type = "text" name ="first_name" placeholder="Your First Name" required><br>
-  <label> Last Name</label>
-  <input type = "text" name ="last_name" placeholder="Your Last Name" required><br>
-  <label> Date Of Birth</label>
-  <input type = "date" name ="date_of_birth" max="{{today}}" required><br>
-  <label> Email</label>
-  <input type = "email" name = "registered_email" placeholder = "israel123@mail.co.il" required><br>
-  <label> Passport Number</label>
-  <input type = "text" name ="passport_number" placeholder="87654321" minlength="8" maxlength="8" required><br>
-  <label> Phone Number</label>
-  <input type="text" name="phones_list" placeholder="050-0000000" minlength="10" maxlength="10" required><br>
-  <span id="Extra_Phone"></span><br>
-  <button type="button" onclick="addphone()">+ Add another phone number</button><br>
-  <input type = "hidden" name="date_of_registration" value="{{today}}"><br>
-  <label>Password </label>
-  <input type = "password" name="registered_password" placeholder="Create a password" required><br>
-  <input type="submit" value="Sign up">
-</form>
+
+<div class="form-card">
+    <h2>Join FlyTAU Premium</h2>
+    <form action="/sign_up" method="POST" class="form-grid">
+
+        <div class="input-group">
+            <label>First Name</label>
+            <input type="text" name="first_name" placeholder="Your First Name" required>
+        </div>
+        <div class="input-group">
+            <label>Last Name</label>
+            <input type="text" name="last_name" placeholder="Your Last Name" required>
+        </div>
+
+        <div class="input-group">
+            <label>Date Of Birth</label>
+            <input type="date" name="date_of_birth" max="{{today}}" required style="color-scheme: dark;">
+        </div>
+        <div class="input-group">
+            <label>Passport Number</label>
+            <input type="text" name="passport_number" placeholder="87654321" minlength="8" maxlength="8" required>
+        </div>
+
+        <div class="input-group full-width">
+            <label>Email Address</label>
+            <input type="email" name="registered_email" placeholder="israel123@mail.co.il" required>
+        </div>
+
+        <div class="input-group full-width">
+            <label>Phone Number</label>
+            <input type="tel" name="phones_list" placeholder="050-0000000" minlength="10" maxlength="10" required>
+            <div id="Extra_Phone"></div>
+            <button type="button" class="btn-secondary" onclick="addphone()">+ Add another phone number</button>
+        </div>
+
+        <div class="input-group full-width">
+            <label>Password</label>
+            <input type="password" name="registered_password" placeholder="Create a strong password" required>
+        </div>
+
+        <input type="hidden" name="date_of_registration" value="{{today}}">
+        <input type="submit" value="Sign Up Now">
+    </form>
+</div>
 
 <script>
     function addphone() {
         var container = document.getElementById("Extra_Phone");
         var input = document.createElement("input");
-
-        input.type = "text";
-        input.name = "phone_list";
-        input.placeholder = "050-0000000";
+        input.type = "tel"; // שיניתי ל-tel שמתאים יותר לטלפונים
+        input.name = "phones_list";
+        input.placeholder = "Another Phone Number";
         input.minLength = "10";
         input.maxLength = "10";
-
         container.appendChild(input);
-
-        var br = document.createElement("br");
-        container.appendChild(br);
     }
-    </script>
+</script>
+
 </body>
 </html>

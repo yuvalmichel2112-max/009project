@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FlyTAU | Search Flight</title>
+    <style>
+        :root {
+            --deep-plum: #2E0249;
+            --plum: #5D3A76;
+            --orange: #FF8C00;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(-45deg, var(--deep-plum), var(--plum), var(--orange), #1a091d);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+
+        h1 {
+            font-weight: 700;
+            color: var(--orange);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        select, input[type="date"] {
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            background: white;
+            color: var(--plum);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .counter-wrapper {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 12px;
+            width: fit-content;
+            overflow: hidden;
+        }
+
+        .counter-btn {
+            background: var(--plum);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .counter-btn:hover {
+            background: var(--orange);
+        }
+
+        #passenger_count {
+            width: 60px;
+            text-align: center;
+            border: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--plum);
+            background: white;
+        }
+
+        /* כפתור החיפוש הכתום */
+        input[type="submit"] {
+            background: var(--orange);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            width: 100%;
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 140, 0, 0.3);
+        }
+
+        input[type="submit"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 140, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Search Flight</h1>
+    <form action="/search_flight" method="POST">
+
+        <div class="form-group">
+            <label>From:</label>
+            <select name="loc1">
+                {% for loc in locations %}
+                    <option value="{{loc.id}}">{{loc.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>To:</label>
+            <select name="loc2">
+                {% for loc in locations %}
+                    <option value="{{loc.id}}">{{loc.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>When:</label>
+            <input type="date" name="date_of_flight" min="{{today}}">
+        </div>
+
+        <div class="form-group">
+            <label>Passengers:</label>
+            <div class="counter-wrapper">
+                <button type="button" class="counter-btn" onclick="changeValue(-1)">-</button>
+                <input type="number" id="passenger_count" name="passengers" value="1" min="1" max="10" readonly>
+                <button type="button" class="counter-btn" onclick="changeValue(1)">+</button>
+            </div>
+        </div>
+
+        <input type="submit" value="Search Flights">
+    </form>
+</div>
+
+<script>
+    function changeValue(delta) {
+        const input = document.getElementById('passenger_count');
+        let newValue = parseInt(input.value) + delta;
+        if (newValue >= 1 && newValue <= 10) {
+            input.value = newValue;
+        }
+    }
+</script>
+
+</body>
+</html>

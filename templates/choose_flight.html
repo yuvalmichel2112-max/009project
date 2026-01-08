@@ -5,13 +5,17 @@
     <title>Title</title>
 </head>
 <body>
-<h1>Flights Board</h1>
+<h1> Choose a flight</h1>
 <table>
     <thead>
         <tr>
-            <th>origin</th>
-            <th>destination</th>
-            <th>date</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Departure Time</th>
+            <th>Landing Time</th>
+            <th>Duration</th>
+            <th>Economy Price</th>
+            <th>Business Price</th>
         </tr>
     </thead>
         <tbody>
@@ -22,7 +26,12 @@
                     <td>{{flight.destination_airport}}</td>
                     <td>{{flight.departure_date}}</td>
                     <td>
-                        <a href="/flight/{{flights.flight_id}}/seats" class="select-button>choose seats</a>
+                        {% for dept in flight.available_depts %}
+                        <a href="/flight/{{ flight.flight_id }}/select seats/{{ dept }}"
+                           class="btn-{{ dept | lower }}">
+                            {{ dept }}
+                        </a>
+                        {% endfor %}
                     </td>
                 </tr>
                 {%endif%}
@@ -32,5 +41,7 @@
 {%if flights|length == 0%}
     <p>no available flights</p>
 {%endif%}
+</body>
+</html>
 </body>
 </html>
