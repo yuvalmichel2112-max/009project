@@ -101,5 +101,13 @@ def search_flights():
 #     return render_template("seats.html", rows = rows, cols = cols, flight_id = flight_id, occupied = occupied)
 #
 
+@app.route("/managers_log_in", methods = ["GET, POST"])
+def managers_log_in():
+    if request.method == "POST":
+        session["managers_ID"] = request.form.get("managers_ID")
+        session["managers_password"] = request.form.get("managers_password")
+        return redirect("/managers_home_page")
+    return render_template("managers_log_in.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
