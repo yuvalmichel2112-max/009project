@@ -1,5 +1,6 @@
 import mysql.connector
 from contextlib import contextmanager
+from datetime import datetime, timedelta
 
 def mydb():
     return mysql.connector.connect(
@@ -19,6 +20,29 @@ def db_cur():
     finally:
         cursor.close()
         conn.close()
+
+def get_flight_dept(flight_id):
+    with db_cur as cursor:
+        query = """SELECT a.size AS airplane_size 
+                FROM airplane AS a JOIN flight AS f ON a.id = f.airplane_id
+                WHERE f.id = %s"""
+        cursor.execute(query,(flight_id,))
+        airplane_size = cursor.fetchone()
+        flight_dept = ['Economy']
+        if airplane_size and airplane_size[0] == 'large':
+            flight_dept.append('Business')
+        return flight_dept
+
+def get_time_display(departure_time, duration):
+    if not departure_time or duration is None:
+        return "--:--", "--:--"
+    landing_time = departure_time + timedelta(hours=float(duration))
+    departure_display=departure_time.strftime('%H:%M')
+    landing_display = landing_time.strftime('%H:%M')
+    if landing_time.date() > departure_time.date():
+        days_diff = (landing_time.date() - departure_time.date()).days
+        landing_display += f" (+{days_diff} day)"
+    return departure_display, landing_display
 
 def get_department_dimensions(flight_id, department_type):
     with db_cur() as cursor:
