@@ -146,6 +146,17 @@
             color: var(--accent-orange);
             background: rgba(255, 255, 255, 0.1);
         }
+
+        .error-message {
+            background: rgba(255, 107, 0, 0.2);
+            color: #FFD580;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border: 1px solid var(--accent-orange);
+        }
     </style>
 </head>
 <body>
@@ -154,6 +165,11 @@
     <h1> Welcome to FlyTAU!</h1>
     <h2> log-in for registered costumers</h2>
     <form action="/" method="POST">
+    {% if error %}
+    <div class="error-message">
+        {{ error }}
+    </div>
+    {% endif %}
     <div class="login-row">
         <input type="email" name="registered_email" placeholder="Email" required>
         <input type="password" name="registered_password" placeholder="password" required>

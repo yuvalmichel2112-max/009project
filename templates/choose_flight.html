@@ -2,46 +2,164 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>FlyTAU | Choose Your Flight</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-plum: #2E0249;
+            --mid-plum: #6a1b9a;
+            --vibrant-orange: #FF6B00;
+            --dark-purple: #1a091d;
+            --accent-orange: #FF8C00;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(-45deg, var(--deep-plum), var(--mid-plum), var(--vibrant-orange), var(--dark-purple));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .results-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 1000px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 40px;
+            background: linear-gradient(to right, #fff, var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 15px;
+        }
+
+        th {
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 10px;
+        }
+
+        tbody tr {
+            background: rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.01);
+        }
+
+        td {
+            padding: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        td:first-child { border-radius: 15px 0 0 15px; }
+        td:last-child { border-radius: 0 15px 15px 0; }
+
+        .iata-code {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-economy { background: var(--mid-plum); color: white; border: 1px solid rgba(255,255,255,0.2); }
+        .btn-business { background: linear-gradient(45deg, var(--accent-orange), #FF6B00); color: white; border: none; }
+
+        .no-class { color: rgba(255,255,255,0.3); font-size: 1.2rem; }
+    </style>
 </head>
 <body>
-<h1> Choose a flight</h1>
-<table>
-    <thead>
-        <tr>
-            <th>From</th>
-            <th>To</th>
-            <th>Departure Time</th>
-            <th>Landing Time</th>
-            <th>Duration</th>
-            <th>Economy Price</th>
-            <th>Business Price</th>
-        </tr>
-    </thead>
-        <tbody>
-            {% for flight in flights %}
-                {% if flight.status == active%}
+
+    <div class="results-container">
+        <h1>Available Flights</h1>
+        <table>
+            <thead>
                 <tr>
-                    <td>{{flight.origin_airport}}</td>
-                    <td>{{flight.destination_airport}}</td>
-                    <td>{{flight.departure_date}}</td>
-                    <td>
-                        {% for dept in flight.available_depts %}
-                        <a href="/flight/{{ flight.flight_id }}/select seats/{{ dept }}"
-                           class="btn-{{ dept | lower }}">
-                            {{ dept }}
-                        </a>
-                        {% endfor %}
-                    </td>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Departure</th>
+                    <th>Landing</th>
+                    <th>Duration</th>
+                    <th>Economy</th>
+                    <th>Business</th>
                 </tr>
-                {%endif%}
-            {%endfor%}
-        </tbody>
-</table>
-{%if flights|length == 0%}
-    <p>no available flights</p>
-{%endif%}
-</body>
-</html>
+            </thead>
+            <tbody>
+                {% for flight in flights %}
+                    {% if flight.status == 'active' %}
+                    <tr>
+                        <td class="iata-code">{{ flight.origin_code }}</td>
+                        <td class="iata-code">{{ flight.destination_code }}</td>
+                        <td>{{ flight.departure_time }}</td>
+                        <td>{{ flight.landing_time }}</td>
+                        <td>{{ flight.duration }}</td>
+                        <td>
+                            <a href="/flight/{{ flight.flight_id }}/select_seats/Economy?psgrs={{ passengers }}"
+                               class="btn btn-economy">Select</a>
+                        </td>
+                        <td>
+                            {% if flight.has_business %}
+                                <a href="/flight/{{ flight.flight_id }}/select_seats/Business?psgrs={{ passengers }}"
+                                   class="btn btn-business">Select</a>
+                            {% else %}
+                                <span class="no-class">—</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if flights|length == 0 %}
+            <p style="text-align: center; padding: 20px; color: var(--accent-orange);">
+                Sorry, no flights were found for your search.
+            </p>
+        {% endif %}
+    </div>
+
 </body>
 </html>
