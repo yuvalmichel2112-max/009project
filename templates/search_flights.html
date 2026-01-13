@@ -74,6 +74,18 @@
             outline: none;
         }
 
+        select, input[type="date"], input[list] {
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            background: white;
+            color: var(--plum);
+            font-size: 1rem;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
         .counter-wrapper {
             display: flex;
             align-items: center;
@@ -109,7 +121,6 @@
             background: white;
         }
 
-        /* כפתור החיפוש הכתום */
         input[type="submit"] {
             background: var(--orange);
             color: white;
@@ -132,34 +143,32 @@
     </style>
 </head>
 <body>
+{% if error %}
+    <p style="color: #ff4d4d; font-weight: bold; background: rgba(255,0,0,0.1); padding: 10px; border-radius: 10px;">
+        {{ error }}
+    </p>
+{% endif %}
 
 <div class="container">
     <h1>Search Flight</h1>
-    <form action="/search_flight" method="POST">
-
+    <form action="/search_flights" method="POST">
         <div class="form-group">
             <label>From:</label>
-            <select name="loc1">
-                {% for loc in locations %}
-                    <option value="{{loc.id}}">{{loc.name}}</option>
-                {% endfor %}
-            </select>
+            <input list="locations_list" name="loc1" placeholder="Search city or country..." required>
         </div>
-
         <div class="form-group">
             <label>To:</label>
-            <select name="loc2">
-                {% for loc in locations %}
-                    <option value="{{loc.id}}">{{loc.name}}</option>
-                {% endfor %}
-            </select>
+            <input list="locations_list" name="loc2" placeholder="Search city or country..." required>
         </div>
-
+        <datalist id="locations_list">
+            {% for loc in locations %}
+                <option value="{{ loc[0] }}, {{ loc[1] }}">
+            {% endfor %}
+        </datalist>
         <div class="form-group">
             <label>When:</label>
-            <input type="date" name="date_of_flights" min="{{today}}">
+            <input type="date" name="date_of_flights" min="{{today}}" required>
         </div>
-
         <div class="form-group">
             <label>Passengers:</label>
             <div class="counter-wrapper">
@@ -168,7 +177,6 @@
                 <button type="button" class="counter-btn" onclick="changeValue(1)">+</button>
             </div>
         </div>
-
         <input type="submit" value="Search Flights">
     </form>
 </div>

@@ -64,19 +64,41 @@ def sign_up():
             cursor.execute(query2, (session["registered_email"],session["registered_password"],session["date_of_birth"], session["registered_password"],session["registered_password"] ))
             query3 = "INSERT INTO customer_phone_number(customer_email, phone_number) VALUES (%s, %s)"
             cursor.execute(query3, (session["registered_email"],session["phones_list"]))
-        return redirect("/flights")
+        return redirect("/search_flights")
     return render_template("sign_up.html")
 
-@app.route("/search_flights", methods = ["GET", "POST"])
+@app.route("/search_flights", methods=["GET", "POST"])
 def search_flights():
     today = date.today().strftime('%Y-%m-%d')
-    locations = get_all_locations()
+
     if request.method == "POST":
-        loc1 = request.form.get("loc1")
-        loc2 = request.form.get("loc2")
         date_of_flights = request.form.get("date_of_flights")
         number_of_pass = request.form.get("passengers")
-        return redirect(url_for("choose_flight",origin=loc1, destination=loc2,date=date_of_flights, passengers=number_of_pass))
+        origin_raw = request.form.get("loc1")
+        dest_raw = request.form.get("loc2")
+        if origin_raw == dest_raw:
+            locations = get_all_locations()
+            return render_template("search_flight.html",
+                                   locations=locations,
+                                   today=today,
+                                   error="Origin and destination must be different!")
+        try:
+            origin_city, origin_country = origin_raw.split(", ")
+            dest_city, dest_country = dest_raw.split(", ")
+        except (ValueError, AttributeError):
+            locations = get_all_locations()
+            return render_template("search_flight.html",
+                                   locations=locations,
+                                   today=today,
+                                   error="Please select a valid location from the list.")
+        return redirect(url_for("choose_flight",
+                                origin_city=origin_city,
+                                origin_country=origin_country,
+                                dest_city=dest_city,
+                                dest_country=dest_country,
+                                date=date_of_flights,
+                                passengers=number_of_pass))
+    locations = get_all_locations()
     return render_template("search_flight.html", locations=locations, today=today)
 
 @app.route("/choose_flight", methods = ["GET", "POST"])

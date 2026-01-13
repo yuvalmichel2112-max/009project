@@ -76,5 +76,5 @@ def save_booking(email, selected_seats, flight_id):
 
 def get_all_locations():
     with db_cur as cursor:
-        cursor.execute("SELECT * FROM airport")
-        return cursor.fetchall
+        cursor.execute("SELECT DISTINCT city, country FROM airport")
+        return cursor.fetchall()
