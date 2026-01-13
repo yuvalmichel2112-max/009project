@@ -2,119 +2,130 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>FlyTAU | Choose Your Flight</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlyTAU | Select Your Flight</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --deep-plum: #2E0249;
-            --mid-plum: #6a1b9a;
-            --vibrant-orange: #FF6B00;
-            --dark-purple: #1a091d;
-            --accent-orange: #FF8C00;
+            --bg-deep: #0a0b0d;
+            --card-graphite: #16181c;
+            --emerald: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.15);
+            --border: rgba(255, 255, 255, 0.05);
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(-45deg, var(--deep-plum), var(--mid-plum), var(--vibrant-orange), var(--dark-purple));
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top, #1c1f24 0%, var(--bg-deep) 100%);
             margin: 0;
+            color: white;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-            color: #fff;
-            padding: 40px 20px;
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .results-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 40px;
-            border-radius: 30px;
-            width: 100%;
-            max-width: 1000px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            padding: 50px 20px;
         }
 
         h1 {
-            text-align: center;
+            font-family: 'Orbitron', sans-serif;
             font-size: 2.5rem;
-            font-weight: 800;
+            letter-spacing: 5px;
             margin-bottom: 40px;
-            background: linear-gradient(to right, #fff, var(--accent-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            text-align: center;
+            color: white;
+        }
+
+        h1 span { color: var(--emerald); }
+
+        .table-container {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--card-graphite);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
         table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 15px;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        thead {
+            background: rgba(16, 185, 129, 0.05);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         th {
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.6);
-            padding: 10px;
-        }
-
-        tbody tr {
-            background: rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
-        }
-
-        tbody tr:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: scale(1.01);
+            padding: 25px;
+            color: var(--emerald);
+            border-bottom: 2px solid var(--border);
         }
 
         td {
-            padding: 20px;
-            text-align: center;
-            font-weight: 600;
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border);
+            font-size: 1rem;
+            color: #e2e8f0;
         }
 
-        td:first-child { border-radius: 15px 0 0 15px; }
-        td:last-child { border-radius: 0 15px 15px 0; }
-
-        .iata-code {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--accent-orange);
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 20px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 800;
-            font-size: 0.8rem;
-            text-transform: uppercase;
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
             transition: 0.3s;
-            cursor: pointer;
         }
 
-        .btn-economy { background: var(--mid-plum); color: white; border: 1px solid rgba(255,255,255,0.2); }
-        .btn-business { background: linear-gradient(45deg, var(--accent-orange), #FF6B00); color: white; border: none; }
+        .code {
+            font-weight: 800;
+            color: white;
+            font-size: 1.2rem;
+        }
 
-        .no-class { color: rgba(255,255,255,0.3); font-size: 1.2rem; }
+        .price {
+            font-weight: 700;
+            color: var(--emerald);
+        }
+
+        .select-btn {
+            background: transparent;
+            border: 1px solid var(--emerald);
+            color: var(--emerald);
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .select-btn:hover {
+            background: var(--emerald);
+            color: var(--bg-deep);
+            box-shadow: 0 0 20px var(--emerald-glow);
+        }
+
+        .no-flights {
+            padding: 100px;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            color: #4b5563;
+        }
     </style>
 </head>
 <body>
 
-    <div class="results-container">
-        <h1>Available Flights</h1>
+    <h1>AVAILABLE <span>FLIGHTS</span></h1>
+
+    <div class="table-container">
+        {% if flights %}
         <table>
             <thead>
                 <tr>
@@ -122,42 +133,40 @@
                     <th>To</th>
                     <th>Departure</th>
                     <th>Landing</th>
-                    <th>Duration</th>
                     <th>Economy</th>
                     <th>Business</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 {% for flight in flights %}
-                    {% if flight.status == 'active' %}
-                    <tr>
-                        <td class="iata-code">{{ flight.origin_code }}</td>
-                        <td class="iata-code">{{ flight.destination_code }}</td>
-                        <td>{{ flight.departure_time }}</td>
-                        <td>{{ flight.landing_time }}</td>
-                        <td>{{ flight.duration }}</td>
-                        <td>
-                            <a href="/flight/{{ flight.flight_id }}/select_seats/Economy?psgrs={{ passengers }}"
-                               class="btn btn-economy">Select</a>
-                        </td>
-                        <td>
-                            {% if flight.has_business %}
-                                <a href="/flight/{{ flight.flight_id }}/select_seats/Business?psgrs={{ passengers }}"
-                                   class="btn btn-business">Select</a>
-                            {% else %}
-                                <span class="no-class">—</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endif %}
+                <tr>
+                    <td class="code">{{ flight.origin_code }}</td>
+                    <td class="code">{{ flight.destination_code }}</td>
+                    <td>{{ flight.departure_time }}</td>
+                    <td>{{ flight.landing_time }}</td>
+                    <td class="price">${{ flight.price_economy }}</td>
+                    <td class="price">
+                        {% if flight.has_business %}
+                            ${{ flight.price_business }}
+                        {% else %}
+                            <span style="color: #4b5563; font-size: 0.8rem;">N/A</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form action="/book_flight" method="POST">
+                            <input type="hidden" name="flight_id" value="{{ flight.flight_id }}">
+                            <button type="submit" class="select-btn">Select</button>
+                        </form>
+                    </td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
-
-        {% if flights|length == 0 %}
-            <p style="text-align: center; padding: 20px; color: var(--accent-orange);">
-                Sorry, no flights were found for your search.
-            </p>
+        {% else %}
+        <div class="no-flights">
+            NO FLIGHTS FOUND FOR THIS CRITERIA
+        </div>
         {% endif %}
     </div>
 

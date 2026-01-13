@@ -4,183 +4,214 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlyTAU | Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500;700&family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --light-eggplant: #5D3A76;
-            --deep-eggplant: #3B1E48;
-            --accent-orange: #FF8C00;
+            --eggplant: #2E0249;
+            --plum: #570A57;
+            --orange: #FF8C00;
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, var(--light-eggplant) 0%, var(--deep-eggplant) 100%);
-            height: 100vh;
             margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: 'Comfortaa', cursive;
+            background: linear-gradient(135deg, var(--eggplant) 0%, var(--plum) 50%, var(--orange) 160%);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             color: white;
-        }
-        .main-logo {
-            width: 120px; /* את יכולה לשנות את הגודל */
-            height: auto;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
-            transition: transform 0.3s ease;
+            overflow: hidden;
+            position: relative;
         }
 
-        .main-logo:hover {
-            transform: scale(1.1) rotate(5deg); /* קצת "חיות" בלחיצה/מעבר עכבר */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("{{ url_for('static', filename='images/FlyTAU-logo.png') }}");
+            background-size: 140px;
+            background-repeat: repeat;
+            opacity: 0.05;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 60px 40px;
+            border-radius: 50px;
+            text-align: center;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
         }
 
         h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin: 0;
-            letter-spacing: -1px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.2rem;
+            margin: 0 0 5px 0;
+            letter-spacing: 6px;
+            font-weight: 900;
+            background: linear-gradient(to bottom, #ffffff 60%, var(--orange) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+            text-transform: uppercase;
         }
 
         h2 {
             font-weight: 300;
-            margin-bottom: 40px;
-            opacity: 0.8;
-            font-size: 1.2rem;
+            font-size: 1rem;
+            margin-bottom: 45px;
+            opacity: 0.9;
+            letter-spacing: 1.5px;
+            color: white;
         }
 
-        form {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 40px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            text-align: center;
-        }
-
-        .login-row {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 30px;
+        .input-group {
+            margin-bottom: 20px;
         }
 
         input[type="email"], input[type="password"] {
-            padding: 15px 20px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            background: white;
-            color: #333;
-            width: 200px;
-            font-size: 14px;
+            width: 100%;
+            padding: 18px 25px;
+            background: rgba(255, 255, 255, 0.98);
+            border: 2px solid transparent;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-family: 'Comfortaa', cursive;
+            color: var(--eggplant);
+            box-sizing: border-box;
             outline: none;
-            transition: 0.3s;
+            transition: 0.4s ease;
         }
 
         input:focus {
-            border-color: var(--accent-orange);
-            box-shadow: 0 0 10px rgba(255, 140, 0, 0.2);
+            background: white;
+            border-color: var(--orange);
+            box-shadow: 0 0 20px rgba(255, 140, 0, 0.2);
+            transform: scale(1.02);
         }
 
         input[type="submit"] {
-            background-color: var(--accent-orange);
+            width: 100%;
+            padding: 18px;
+            background: var(--orange);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
+            border-radius: 30px;
+            font-family: 'Comfortaa', cursive;
             font-weight: 700;
+            font-size: 1.2rem;
             cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.3s;
+            transition: 0.3s;
+            margin-top: 15px;
+            box-shadow: 0 10px 25px rgba(255, 140, 0, 0.3);
         }
 
         input[type="submit"]:hover {
-            background-color: #e67e00;
-            transform: translateY(-2px);
+            background: #ff9d26;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 140, 0, 0.4);
         }
 
-        .links-row {
+        .footer-links {
+            margin-top: 35px;
             display: flex;
             justify-content: center;
             gap: 30px;
-            margin-top: 10px;
         }
 
-        .links-row a {
+        .footer-links a {
             color: white;
             text-decoration: none;
             font-size: 0.9rem;
-            font-weight: 400;
             opacity: 0.7;
             transition: 0.3s;
+            font-weight: 500;
             border-bottom: 1px solid transparent;
         }
 
-        .links-row a:hover {
+        .footer-links a:hover {
             opacity: 1;
-            border-bottom: 1px solid var(--accent-orange);
+            color: var(--orange);
+            border-bottom: 1px solid var(--orange);
         }
 
-        .manager-login-link {
+        .admin-btn {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 40px;
+            left: 40px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
             color: white;
             text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 400;
-            opacity: 0.6;
-            padding: 10px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(5px);
-            transition: all 0.3s ease;
-        }
-
-        .manager-login-link:hover {
-            opacity: 1;
-            border-color: var(--accent-orange);
-            color: var(--accent-orange);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .error-message {
-            background: rgba(255, 107, 0, 0.2);
-            color: #FFD580;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             font-weight: 700;
-            border: 1px solid var(--accent-orange);
+            letter-spacing: 1px;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .admin-btn:hover {
+            background: white;
+            color: var(--eggplant);
+        }
+
+        .error-msg {
+            background: rgba(255, 77, 77, 0.2);
+            border: 1px solid #ff4d4d;
+            padding: 12px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            font-size: 0.85rem;
         }
     </style>
 </head>
 <body>
-    <a href="/managers_log_in" class="manager-login-link">Admin Access</a>
-    <img src="{{ url_for('static', filename='images/FlyTAU-logo.png') }}" alt="FlyTAU Logo" class="main-logo">
-    <h1> Welcome to FlyTAU!</h1>
-    <h2> log-in for registered costumers</h2>
-    <form action="/" method="POST">
-    {% if error %}
-    <div class="error-message">
-        {{ error }}
-    </div>
-    {% endif %}
-    <div class="login-row">
-        <input type="email" name="registered_email" placeholder="Email" required>
-        <input type="password" name="registered_password" placeholder="password" required>
-        <input type="submit" value="Log In">
-    </div>
 
-    <div class="links-row">
-        <a href="/sign_up">sign up</a>
-        <a href="/search_flights">continue as guest</a>
+    <a href="/managers_log_in" class="admin-btn">SYSTEM ADMIN</a>
+
+    <div class="login-card">
+
+        <h1>FlyTAU</h1>
+        <h2>Taking home wherever you go</h2>
+
+        <form action="/" method="POST">
+            {% if error %}
+            <div class="error-msg">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <div class="input-group">
+                <input type="email" name="registered_email" placeholder="Email" required>
+            </div>
+
+            <div class="input-group">
+                <input type="password" name="registered_password" placeholder="Password" required>
+            </div>
+
+            <input type="submit" value="Sign In">
+
+            <div class="footer-links">
+                <a href="/sign_up">Sign Up</a>
+                <a href="/search_flights">Continue As Guest</a>
+            </div>
+        </form>
     </div>
-  </form>
 
 </body>
 </html>

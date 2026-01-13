@@ -13,17 +13,17 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 
-@app.route("/", methods =["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def home_page():
     if request.method == "POST":
-        email=request.form.get("registered_email")
-        password= request.form.get("registered_password")
-        query = "SELECT * FROM registered_customer WHERE email = %s AND password = %s"
+        email = request.form.get("registered_email")
+        password = request.form.get("registered_password")
+        query = "SELECT * FROM registered_customer WHERE customer_email = %s AND password = %s"
         with db_cur() as cursor:
-            cursor.execute(query,(email,password))
-            user=cursor.fetchone()
+            cursor.execute(query, (email, password))
+            user = cursor.fetchone()
         if user:
-            session["registered_email"]=user["customer_email"]
+            session["customer_email"] = user["Customer_Email"]
             return redirect("/search_flights")
         else:
             return render_template("home_page.html", error="Incorrect email or password")
@@ -70,7 +70,6 @@ def sign_up():
 @app.route("/search_flights", methods=["GET", "POST"])
 def search_flights():
     today = date.today().strftime('%Y-%m-%d')
-
     if request.method == "POST":
         date_of_flights = request.form.get("date_of_flights")
         number_of_pass = request.form.get("passengers")
@@ -87,7 +86,7 @@ def search_flights():
             dest_city, dest_country = dest_raw.split(", ")
         except (ValueError, AttributeError):
             locations = get_all_locations()
-            return render_template("search_flight.html",
+            return render_template("search_flights.html",
                                    locations=locations,
                                    today=today,
                                    error="Please select a valid location from the list.")
@@ -99,7 +98,7 @@ def search_flights():
                                 date=date_of_flights,
                                 passengers=number_of_pass))
     locations = get_all_locations()
-    return render_template("search_flight.html", locations=locations, today=today)
+    return render_template("search_flights.html", locations=locations, today=today)
 
 @app.route("/choose_flight", methods = ["GET", "POST"])
 def choose_flight():
@@ -108,29 +107,33 @@ def choose_flight():
     flight_date = request.args.get('flight_date')
     passengers = request.args.get('passengers')
     query = """SELECT f.*, r.duration,o.code as origin_code, d.code as destination_code
-            FROM flights f
+            FROM flight f
             JOIN flight_route AS r 
-            ON f.origin_airport_code = r.origin_airport_code 
-            AND f.destination_airport_code = r.destination_airport_code
-            JOIN airports AS o ON f.origin_airport_id = o.id
-            JOIN airports AS d ON f.dest_airport_id = d.id
-            WHERE f.origin_airport_id = %s 
-            AND f.dest_airport_id = %s 
-            AND DATE(f.departure_time) = %s"""
+            ON f.flight_route_origin_airport_code = r.origin_airport_code 
+            AND f.flight_route_destination_airport_code = r.destination_airport_code
+            JOIN airport AS o ON f.flight_route_origin_airport_code = o.code
+            JOIN airport AS d ON f.flight_route_destination_airport_code = d.code
+            WHERE f.flight_route_origin_airport_code = %s 
+            AND f.flight_route_destination_airport_code = %s 
+            AND DATE(f.departure_datetime) = %s"""
     with db_cur() as cursor:
         cursor.execute(query,(origin,destination, flight_date))
         db_flights = cursor.fetchall()
         processed_flights = []
         for flight in db_flights:
             departure_date, landing_date=utils.get_time_display(flight['departure_time'], flight['duration'])
-            flight_info = {'flight_id': flight['id'],
-            'status': flight['status'],
-            'origin_code': flight['origin_code'],
-            'destination_code': flight['destination_code'],
-            'departure_time': departure_date,
-            'landing_time': landing_date,
-            'duration': f"{flight['duration']}h",
-            'has_business': True if flight['business_seats_count'] > 0 else False}
+            flight_info = {
+                'flight_id': flight['id'],
+                'status': flight['status'],
+                'origin_code': flight['origin_code'],
+                'destination_code': flight['destination_code'],
+                'departure_time': departure_date,
+                'landing_time': landing_date,
+                'duration': f"{flight['duration']}h",
+                'price_economy': flight['price_economy'],
+                'price_business': flight['price_business'] if flight['business_seats_count'] > 0 else "N/A",
+                'has_business': True if flight['business_seats_count'] > 0 else False
+            }
             processed_flights.append(flight_info)
         return render_template("/choose_flight.html",flights=processed_flights, passengers=passengers)
 

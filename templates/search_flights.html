@@ -2,25 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>FlyTAU | Search Flight</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlyTAU | Search Flights</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --deep-plum: #2E0249;
-            --plum: #5D3A76;
-            --orange: #FF8C00;
+            --mid-plum: #6a1b9a;
+            --vibrant-orange: #FF6B00;
+            --dark-purple: #1a091d;
+            --accent-orange: #FF8C00;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(-45deg, var(--deep-plum), var(--plum), var(--orange), #1a091d);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            font-family: 'Montserrat', sans-serif;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: white;
+            color: #fff;
+            padding: 20px;
+            background-color: var(--dark-purple);
+            overflow-x: hidden;
+        }
+
+
+        #dynamic-bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 1s ease-in-out;
+        }
+
+        #bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(-45deg,
+                rgba(46, 2, 73, 0.7),
+                rgba(106, 27, 154, 0.7),
+                rgba(255, 107, 0, 0.6),
+                rgba(26, 9, 29, 0.8));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
         }
 
         @keyframes gradientBG {
@@ -29,159 +62,188 @@
             100% { background-position: 0% 50%; }
         }
 
-        .container {
+        .form-card {
             background: rgba(255, 255, 255, 0.1);
-            -webkit-backdrop-filter: blur(15px);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 40px;
             border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
             width: 100%;
-            max-width: 450px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            max-width: 650px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        h2 {
             text-align: center;
-        }
-
-        h1 {
-            font-weight: 700;
-            color: var(--orange);
+            font-size: 2.5rem;
+            font-weight: 800;
             margin-bottom: 30px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            background: linear-gradient(to right, #fff, var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 0;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
-        .form-group {
-            margin-bottom: 25px;
-            text-align: left;
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .input-group {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            text-align: left;
         }
 
         label {
-            font-weight: 600;
             font-size: 0.9rem;
-            opacity: 0.9;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
 
-        select, input[type="date"] {
-            padding: 12px;
+        input {
+            padding: 15px;
             border-radius: 12px;
-            border: none;
-            background: white;
-            color: var(--plum);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
             outline: none;
+            transition: all 0.3s;
         }
 
-        select, input[type="date"], input[list] {
-            padding: 12px;
-            border-radius: 12px;
-            border: none;
-            background: white;
-            color: var(--plum);
-            font-size: 1rem;
-            outline: none;
-            width: 100%;
-            box-sizing: border-box;
+        input:focus {
+            border-color: var(--accent-orange);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
         }
 
         .counter-wrapper {
             display: flex;
             align-items: center;
-            background: white;
-            border-radius: 12px;
-            width: fit-content;
-            overflow: hidden;
+            gap: 10px;
         }
 
         .counter-btn {
-            background: var(--plum);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             width: 45px;
             height: 45px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 1.2rem;
             font-weight: bold;
+            font-size: 1.2rem;
             transition: 0.3s;
         }
 
-        .counter-btn:hover {
-            background: var(--orange);
-        }
+        .counter-btn:hover { background: var(--accent-orange); }
 
         #passenger_count {
             width: 60px;
             text-align: center;
+            background: transparent;
             border: none;
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--plum);
-            background: white;
+            font-weight: 800;
+            font-size: 1.2rem;
         }
 
         input[type="submit"] {
-            background: var(--orange);
+            grid-column: span 2;
+            background: linear-gradient(45deg, var(--accent-orange), #FF6B00);
             color: white;
             border: none;
             padding: 18px;
             border-radius: 15px;
-            width: 100%;
-            font-weight: 700;
+            font-weight: 800;
             font-size: 1.2rem;
+            margin-top: 20px;
             cursor: pointer;
-            margin-top: 15px;
-            transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(255, 140, 0, 0.3);
+            text-transform: uppercase;
+            transition: all 0.4s;
+            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.3);
         }
 
         input[type="submit"]:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(255, 140, 0, 0.5);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(255, 107, 0, 0.5);
+        }
+
+        .error-msg {
+            background: rgba(255, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
         }
     </style>
 </head>
 <body>
-{% if error %}
-    <p style="color: #ff4d4d; font-weight: bold; background: rgba(255,0,0,0.1); padding: 10px; border-radius: 10px;">
-        {{ error }}
-    </p>
-{% endif %}
 
-<div class="container">
-    <h1>Search Flight</h1>
+<div id="dynamic-bg-image"></div>
+<div id="bg-overlay"></div>
+<div class="form-card">
+    <h2>WHERE TO NEXT?</h2>
+
+    {% if error %}
+        <div class="error-msg">{{ error }}</div>
+    {% endif %}
+
     <form action="/search_flights" method="POST">
-        <div class="form-group">
-            <label>From:</label>
-            <input list="locations_list" name="loc1" placeholder="Search city or country..." required>
-        </div>
-        <div class="form-group">
-            <label>To:</label>
-            <input list="locations_list" name="loc2" placeholder="Search city or country..." required>
-        </div>
-        <datalist id="locations_list">
-            {% for loc in locations %}
-                <option value="{{ loc[0] }}, {{ loc[1] }}">
-            {% endfor %}
-        </datalist>
-        <div class="form-group">
-            <label>When:</label>
-            <input type="date" name="date_of_flights" min="{{today}}" required>
-        </div>
-        <div class="form-group">
-            <label>Passengers:</label>
-            <div class="counter-wrapper">
-                <button type="button" class="counter-btn" onclick="changeValue(-1)">-</button>
-                <input type="number" id="passenger_count" name="passengers" value="1" min="1" max="10" readonly>
-                <button type="button" class="counter-btn" onclick="changeValue(1)">+</button>
+        <div class="form-grid">
+
+            <div class="input-group">
+                <label>FROM</label>
+                <input list="locations_list" name="loc1" placeholder="City or Country" required>
             </div>
+
+            <div class="input-group">
+                <label>TO</label>
+                <input list="locations_list" name="loc2" placeholder="City or Country" required>
+            </div>
+
+                <datalist id="locations_list">
+                    {% for loc in locations %}
+                        {% if loc is mapping %}
+                            <option value="{{ loc.city or loc.City or loc.customer_city }}, {{ loc.country or loc.Country }}">
+                        {% else %}
+                            <option value="{{ loc[0] }}, {{ loc[1] }}">
+                        {% endif %}
+                    {% endfor %}
+                </datalist>
+
+            <div class="input-group">
+                <label>DEPARTURE DATE</label>
+                <input type="date" name="date_of_flights" min="{{ today }}" required>
+            </div>
+
+            <div class="input-group">
+                <label>PASSENGERS</label>
+                <div class="counter-wrapper">
+                    <button type="button" class="counter-btn" onclick="changeValue(-1)">-</button>
+                    <input type="number" id="passenger_count" name="passengers" value="1" min="1" max="10" readonly>
+                    <button type="button" class="counter-btn" onclick="changeValue(1)">+</button>
+                </div>
+            </div>
+
+            <input type="submit" value="Find Flights">
         </div>
-        <input type="submit" value="Search Flights">
     </form>
 </div>
 
 <script>
+
     function changeValue(delta) {
         const input = document.getElementById('passenger_count');
         let newValue = parseInt(input.value) + delta;
@@ -189,6 +251,36 @@
             input.value = newValue;
         }
     }
+
+    const images = [
+        'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=1920&q=80', // תאילנד
+        'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1920&q=80', // פריז
+        'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=1920&q=80', // ניו יורק
+        'https://images.unsplash.com/photo-1517094735327-660e22563909?auto=format&fit=crop&w=1920&q=80', // איסלנד (זוהר צפוני)
+        'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1920&q=80'  // סנטוריני, יוון
+    ];
+
+    let currentIndex = 0;
+    const bgElement = document.getElementById('dynamic-bg-image');
+
+
+    bgElement.style.backgroundImage = `url('${images[0]}')`;
+
+    function rotateImage() {
+        bgElement.style.opacity = 0;
+        setTimeout(() => {
+            currentIndex = (currentIndex + 1) % images.length;
+            const img = new Image();
+            img.src = images[currentIndex];
+            img.onload = () => {
+                 bgElement.style.backgroundImage = `url('${images[currentIndex]}')`;
+                 bgElement.style.opacity = 1;
+            };
+        }, 1000);
+    }
+
+    setInterval(rotateImage, 6000);
+
 </script>
 
 </body>
