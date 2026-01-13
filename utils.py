@@ -7,7 +7,7 @@ def mydb():
         host="localhost",
         user="root",
         password="root",
-        database="flyTAU",
+        database="flytau",
         autocommit=True
         )
 

@@ -4,13 +4,14 @@ import utils
 from flask_session import Session
 from werkzeug.utils import redirect
 import mysql.connector
-from utils import db_cur, get_department_dimensions, get_occupied_seats, save_booking, get_all_locations
+from utils import mydb, db_cur, get_department_dimensions, get_occupied_seats, save_booking, get_all_locations
 from contextlib import contextmanager
 from datetime import date
 
 app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
+
 
 @app.route("/", methods =["GET", "POST"])
 def home_page():
