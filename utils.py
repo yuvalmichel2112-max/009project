@@ -22,7 +22,7 @@ def db_cur():
         conn.close()
 
 def get_flight_dept(flight_id):
-    with db_cur as cursor:
+    with db_cur() as cursor:
         query = """SELECT a.size AS airplane_size 
                 FROM airplane AS a JOIN flight AS f ON a.id = f.airplane_id
                 WHERE f.id = %s"""
@@ -61,7 +61,7 @@ def get_department_dimensions(flight_id, department_type):
         return 0,0
 
 def get_occupied_seats(flight_id,department_type):
-    with db_cur as cursor:
+    with db_cur() as cursor:
         query = "SELECT s.row_number, s.column_number FROM seats AS s WHERE s.status=occupied, flight_id=%s, department_type=%s "
         cursor.execute(query, (flight_id,department_type))
         occupied_seats = cursor.fetchall()
@@ -70,11 +70,11 @@ def get_occupied_seats(flight_id,department_type):
 
 def save_booking(email, selected_seats, flight_id):
     seats_str = ", ".join(selected_seats)
-    with db_cur as cursor:
+    with db_cur() as cursor:
         query = "INSERT INTO booking (email, seats_str, "
 
 
 def get_all_locations():
-    with db_cur as cursor:
+    with db_cur() as cursor:
         cursor.execute("SELECT DISTINCT city, country FROM airport")
         return cursor.fetchall()

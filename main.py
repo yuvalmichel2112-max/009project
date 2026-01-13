@@ -4,7 +4,7 @@ import utils
 from flask_session import Session
 from werkzeug.utils import redirect
 import mysql.connector
-from utils import mydb, db_cur, get_department_dimensions, get_occupied_seats, save_booking, get_all_locations
+from utils import db_cur, get_department_dimensions, get_occupied_seats, save_booking, get_all_locations
 from contextlib import contextmanager
 from datetime import date
 
@@ -19,7 +19,7 @@ def home_page():
         email=request.form.get("registered_email")
         password= request.form.get("registered_password")
         query = "SELECT * FROM registered_customer WHERE email = %s AND password = %s"
-        with db_cur as cursor:
+        with db_cur() as cursor:
             cursor.execute(query,(email,password))
             user=cursor.fetchone()
         if user:
@@ -54,7 +54,7 @@ def sign_up():
         phones_list = request.form.getlist("phones_list")
         date_of_registration = request.form.get("date_of_registration")
         registered_password = request.form.get("registered_password")
-        with db_cur as cursor:
+        with db_cur() as cursor:
             cursor.execute("SELECT * FROM registered_customer WHERE passport_number=%s",(passport_number,))
             if cursor.fetchone():
                 return render_template('sign_up.html', error = "passport number already exists")
@@ -117,7 +117,7 @@ def choose_flight():
             WHERE f.origin_airport_id = %s 
             AND f.dest_airport_id = %s 
             AND DATE(f.departure_time) = %s"""
-    with db_cur as cursor:
+    with db_cur() as cursor:
         cursor.execute(query,(origin,destination, flight_date))
         db_flights = cursor.fetchall()
         processed_flights = []
@@ -173,24 +173,39 @@ def select_seats():
 #     return render_template("seats.html", rows = rows, cols = cols, flight_id = flight_id, occupied = occupied)
 #
 
-@app.route("/managers_log_in", methods = ["GET", "POST"])
+@app.route("/managers_log_in", methods=["GET", "POST"])
 def managers_log_in():
     if request.method == "POST":
-        session["managers_ID"] = request.form.get("managers_ID")
-        session["managers_password"] = request.form.get("managers_password")
-        return redirect("/managers_home_page")
+        manager_id = request.form.get("managers_ID")
+        manager_pass = request.form.get("managers_password")
+        with db_cur() as cursor:
+            query = "SELECT id FROM manager WHERE id = %s AND password = %s"
+            cursor.execute(query, (manager_id, manager_pass))
+            manager = cursor.fetchone()
+            if manager:
+                session["managers_ID"] = manager_id
+                return redirect("/managers_home_page")
+            else:
+                return render_template("managers_log_in.html", error="ID or Password incorrect")
     return render_template("managers_log_in.html")
 
-@app.route("/managers_home_page", methods = ["GET"])
+
+@app.route("/managers_home_page", methods=["GET"])
 def managers_home_page():
-    manager_id = session["managers_ID"]
-    if not manager_id:
+    if "managers_ID" not in session:
         return redirect("/managers_log_in")
-    with db_cur as cursor:
-        query = "SELECT first_name FROM managers WHERE id = %s"
+    manager_id = session["managers_ID"]
+    with db_cur() as cursor:
+        query = "SELECT first_name FROM manager WHERE id = %s"
         cursor.execute(query, (manager_id,))
         result = cursor.fetchone()
-        manager_first_name = result[0]
+        if result:
+            try:
+                manager_first_name = result['first_name']
+            except KeyError:
+                manager_first_name = result[0]
+            return render_template("managers_home_page.html", name=manager_first_name)
+    return redirect("/managers_log_in")
 
 if __name__ == "__main__":
     app.run(debug=True)
