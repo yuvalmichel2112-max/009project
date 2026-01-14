@@ -118,18 +118,16 @@ def choose_flight():
         processed_flights = []
         for flight in db_flights:
             departure_date, landing_date=utils.get_time_display(flight['Departure_datetime'], flight['duration'])
-            flight_info = {
-                'flight_id': flight['ID'],
-                'status': flight['status'],
-                'origin_code': flight['origin_code'],
-                'destination_code': flight['destination_code'],
-                'departure_time': departure_date,
-                'landing_time': landing_date,
-                'duration': f"{flight['duration']}h",
-                'price_economy': flight['Economy_price'],
-                'price_business': flight['Business_price'] if flight['Business_price'] else "N/A",
-                'has_business': True if flight['Business_price'] else False
-            }
+            flight_info = {'flight_id': flight['ID'],
+                            'status': flight['status'],
+                            'origin_code': flight['origin_code'],
+                            'destination_code': flight['destination_code'],
+                            'departure_time': departure_date,
+                            'landing_time': landing_date,
+                            'duration': f"{flight['duration']}h",
+                            'price_economy': flight['Economy_price'],
+                            'price_business': flight['Business_price'] if flight['Business_price'] else "N/A",
+                            'has_business': True if flight['Business_price'] else False}
             processed_flights.append(flight_info)
         return render_template("choose_flight.html", flights=processed_flights, passengers=passengers)
 

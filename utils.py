@@ -45,12 +45,13 @@ def get_time_display(departure_time, duration):
     return departure_display, landing_display
 
 def get_department_dimensions(flight_id, department_type):
+    department_map =
     with db_cur() as cursor:
         query = """
-            SELECT d.number_of_rows, d.number_of_columns 
-            FROM department AS d 
-            JOIN flight AS f ON f.airplane_id = d.airplane_id 
-            WHERE f.flight_id = %s AND d.department_type = %s"""
+            SELECT d.Number_of_rows, d.Number_of_columns 
+            FROM Department AS d 
+            JOIN Flight AS f ON f.Airplane_id = d.Airplane_id 
+            WHERE f.id = %s AND d.type = %s"""
         cursor.execute(query,(flight_id,department_type))
         result = cursor.fetchone()
         if result:
@@ -59,11 +60,14 @@ def get_department_dimensions(flight_id, department_type):
 
 def get_occupied_seats(flight_id,department_type):
     with db_cur() as cursor:
-        query = """SELECT s.row_number, s.column_number
-                    FROM seats AS s     
-                    WHERE s.status='occupied'
-                    AND flight_id=%s
-                     AND department_type=%s """
+        query = """SELECT Row_number, Column_number FROM Seat_by_guest 
+                    WHERE Department_Type = %s AND Booking_by_guest_ID IN 
+                    (SELECT ID FROM Booking_by_guest WHERE Flight_ID = %s)
+                    UNION
+                    SELECT Row_number, Column_number FROM Seat_by_registered_costumers 
+                    WHERE Department_Type = %s AND Booking_by_registered_costumers_ID IN 
+                    (SELECT ID FROM Booking_by_registered_costumers WHERE Flight_ID = %s)
+                """
         cursor.execute(query, (flight_id,department_type))
         occupied_seats = cursor.fetchall()
         occupied = [f"{occupied_seats[0]}-{occupied_seats[1]}" for seat in occupied_seats]
