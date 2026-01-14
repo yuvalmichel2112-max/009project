@@ -27,16 +27,6 @@ def home_page():
             return render_template("home_page.html", error="Incorrect email or password")
     return render_template("home_page.html")
 
-# @app.route("/continue_as_guest", methods = ["POST"])
-# def continue_as_guest():
-#     Session["guest_email"]=request.form.get("guest_email")
-#     query1 = "INSERT INTO customer(email, first_name, last_name) VALUES (%s, %s, %s)"
-#     query2 = "INSERT INTO customer_phone_number(guest_email, phone_number) VALUES (%s, %s)"
-#     with db_cur as cursor:
-#         cursor.execute(query1, (session["guest_email"], session["first_name"], session["last_name"]))
-#         cursor.execute(query2, (session["guest_email"], session["phones_list"]))
-#         return redirect("/flights")
-
 @app.route("/sign_up", methods = ["POST", "GET"])
 def sign_up():
     today= date.today().strftime('%Y-%m-%d')
@@ -110,8 +100,7 @@ def choose_flight():
                 JOIN airport AS d ON f.flight_route_destination_airport_code = d.code
                 WHERE o.city = %s 
                 AND d.city = %s 
-                AND DATE(f.departure_datetime) = %s
-            """
+                AND DATE(f.departure_datetime) = %s"""
     with db_cur() as cursor:
         cursor.execute(query,(origin_city,destination_city, flight_date))
         db_flights = cursor.fetchall()
@@ -131,50 +120,25 @@ def choose_flight():
             processed_flights.append(flight_info)
         return render_template("choose_flight.html", flights=processed_flights, passengers=passengers)
 
-# @app.route("/flights", methods = ["GET"])
-# def show_flights():
-#     def show_flights():
-#         try:
-#             with db_cur() as cursor:
-#                 query = """
-#                     SELECT f.flight_id, f.origin_airport, f.destination_airport, f.departure_date, f.status,
-#                            d.department_type
-#                     FROM flights f
-#                     JOIN department d ON f.airplane_id = d.airplane_id
-#                     WHERE f.status = 'active'
-#                 """
-#                 cursor.execute(query)
-#                 rows = cursor.fetchall()
-#             flights_dict = {}
-#             for row in rows:
-#                 f_id = row['flight_id']
-#                 if f_id not in flights_dict:
-#                     flights_dict[f_id] = row
-#                     flights_dict[f_id]['available_depts'] = []
-#                 flights_dict[f_id]['available_depts'].append(row['department_type'])
-#             return render_template("search_flights.html", flights=list(flights_dict.values()))
-#         except mysql.connector.Error as err:
-#             print(f"Database error: {err}")
-
-@app.route("/select_seats/<flight_id>/<department_type>", methods=["GET", "POST"])
+@app.route('/select_seats/<int:flight_id>/<department_type>', methods=['GET', 'POST'])
 def select_seats(flight_id, department_type):
-    occupied = utils.get_occupied_seats(flight_id, department_type)
-    rows, cols = utils.get_department_dimensions(flight_id, department_type)
     if request.method == 'POST':
-        selected_seat = request.form.get("selected_seat")
-        if selected_seat:
-            session['selected_seat'] = selected_seat
-            return redirect(url_for('payment'))
-    return render_template("select_seats.html",
+        selected_seats = request.form.getlist('seat_choice')
+        session['selected_seats'] = selected_seats
+        session['flight_id'] = flight_id
+        session['department_type'] = department_type
+        return redirect(url_for('guest_details'))
+    num_passengers = request.args.get('passengers', default=1, type=int)
+    rows, cols = get_department_dimensions(flight_id, department_type)
+    occupied = get_occupied_seats(flight_id, department_type)
+    return render_template('select_seats.html',
+                           flight_id=flight_id,
+                           department_type=department_type,
                            rows=rows,
                            cols=cols,
                            occupied=occupied,
-                           dept=department_type,
-                           flight_id=flight_id)
+                           num_passengers=num_passengers)
 
-# save_booking(session['email'], selected, flight_id) #האם ואיך צריכה להיות הפרדה בין לקוח רשום ללקוח ואיך ?
-#         return (f"seats booked for {flight_id}")
-#     return render_template("seats.html", rows = rows, cols = cols, flight_id = flight_id, occupied = occupied)
 
 @app.route("/managers_log_in", methods=["GET", "POST"])
 def managers_log_in():
