@@ -2,56 +2,173 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>FlyTAU | Seat Selection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Varela+Round&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .seat-box{
-            width: 80px;
-            height: 80px;
-            line-height: 80px;
-            border: 2px solid #000000;
-            display: block;
-            font-weight: bold;
+        :root {
+            --flytau-purple: #2E0249;
+            --flytau-light-purple: #5b2a86;
+            --flytau-orange: #FF8C00;
+            --flytau-orange-glow: rgba(255, 140, 0, 0.4);
+            --text-light: #ffffff;
+            --occupied-gray: #3a3a45;
         }
 
-        .seat-box input[type="checkbox"]{
+        body {
+            font-family: 'Varela Round', sans-serif;
+            background: radial-gradient(circle at top center, var(--flytau-light-purple) 0%, var(--flytau-purple) 80%);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-light);
+            padding: 30px;
+        }
+
+        .main-container {
+            background: rgba(46, 2, 73, 0.6);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            border: 2px solid rgba(255, 140, 0, 0.2);
+            padding: 50px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .logo-area {
+            font-size: 3rem;
+            color: var(--flytau-orange);
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin: 10px 0;
+            font-size: 2.2rem;
+        }
+        
+        h1 span { color: var(--flytau-orange); }
+
+        h2 {
+            font-weight: normal;
+            opacity: 0.8;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 1.1rem;
+            color: var(--flytau-orange);
+        }
+
+        .seat-table {
+            margin: 0 auto;
+            border-spacing: 15px;
+            border-collapse: separate;
+        }
+
+        .seat-box {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 16px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+        }
+
+        label.seat-box.available {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--flytau-light-purple);
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        label.seat-box.available:hover {
+            border-color: var(--flytau-orange);
+            box-shadow: 0 0 15px var(--flytau-orange-glow);
+            transform: translateY(-3px);
+        }
+
+        .seat-box input[type="checkbox"] {
             display: none;
         }
-        .seat-box:has(input:checked){
-            background-color: #ffff00;
-            border: 5px solid #000000;
+
+        label.seat-box.available:has(input:checked) {
+            background: var(--flytau-orange);
+            border-color: var(--flytau-orange);
+            color: var(--flytau-purple);
+            box-shadow: 0 0 30px var(--flytau-orange-glow);
+            transform: scale(1.1);
         }
 
-        .seat-box.occupied {
-        background-color: #ff0000;
-        color: white;
+        div.seat-box.occupied {
+            background-color: var(--occupied-gray);
+            border: 2px solid transparent;
+            color: rgba(255,255,255,0.3);
+            cursor: not-allowed;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        input[type="submit"] {
+            margin-top: 50px;
+            padding: 18px 50px;
+            background: linear-gradient(135deg, var(--flytau-orange), #ff6b00);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.4s;
+            box-shadow: 0 10px 25px var(--flytau-orange-glow);
+        }
+
+        input[type="submit"]:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px var(--flytau-orange-glow);
+            filter: brightness(1.1);
         }
 
     </style>
 </head>
 <body>
-    <h1>Choose Your Seats</h1>
-    <h2>{{department_type}}</h2>
-    <form action="/select_seats" method = "POST">
-          <table class="seat-table">
-              {% for r in range(1, rows+1) %}
-              <tr>
-                  {% for c in range(1, cols+1) %}
-                    {% set seat_id = r ~ "-" ~ c %}
-                    <td>
-                        {% if seat_id in occupied %}
-                            <div class="seat-box occupied">X</div>
-                        {% else %}
-                            <label class ="seat-box available">
-                                <input type="checkbox" name="seat_choice" value="{{seat_id}}">
-                                {{c}}
-                            </label>
-                        {%endif%}
-                    </td>
+    <div class="main-container">
+        <div class="logo-area">
+            <i class="fa-solid fa-plane-circle-check"></i>
+        </div>
+        
+        <h1>CHOOSE YOUR <span>SEATS</span></h1>
+        <h2>{{department_type}} Class</h2>
+        
+        <form action="/select_seats" method="POST">
+              <table class="seat-table">
+                  {% for r in range(1, rows+1) %}
+                  <tr>
+                      {% for c in range(1, cols+1) %}
+                        {% set seat_id = r ~ "-" ~ c %}
+                        <td>
+                            {% if seat_id in occupied %}
+                                <div class="seat-box occupied">X</div>
+                            {% else %}
+                                <label class="seat-box available">
+                                    <input type="checkbox" name="seat_choice" value="{{seat_id}}">
+                                    {{c}} </label>
+                            {% endif %}
+                        </td>
+                      {%endfor%}
+                  </tr>
                   {%endfor%}
-              </tr>
-              {%endfor%}
-          </table>
-        <input type = "submit" value = "SAVE BOOKING">
-    </form>
+              </table>
+            <input type="submit" value="CONFIRM SELECTION">
+        </form>
+    </div>
 </body>
 </html>

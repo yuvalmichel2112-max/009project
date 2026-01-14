@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlyTAU | Executive Terminal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&family=Assistant:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-peach: #FFDAB9;
-            --form-brown: #5D4037;
-            --text-accent: #3E2723;
-            --error-red: #D32F2F;
+            --vibrant-red: #FF3B30;
+            --deep-red: #B71C1C;
+            --text-dark: #1D1D1F;
         }
 
         body, html {
@@ -18,32 +17,46 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            font-family: 'Assistant', sans-serif;
-            background: linear-gradient(135deg, #FFDAB9 0%, #FFB380 100%);
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(-45deg, #FFECF1, #F48FB1, #D32F2F, #8E0000);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: var(--text-accent);
+            color: var(--text-dark);
             overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .login-container {
             width: 90%;
-            max-width: 450px;
-            background: rgba(255, 255, 255, 0.4);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(93, 64, 55, 0.1);
+            max-width: 400px;
+            background: rgba(255, 240, 245, 0.5);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 50px 40px;
+            border-radius: 30px;
+            border: 2px solid rgba(255, 59, 48, 0.4);
+            box-shadow: 0 25px 60px rgba(183, 28, 28, 0.4);
             text-align: center;
         }
 
         h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
-            letter-spacing: 2px;
-            color: var(--text-accent);
-            margin-bottom: 30px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.7rem;
+            letter-spacing: 1px;
+            color: var(--text-dark);
+            margin-bottom: 35px;
+            line-height: 1.1;
             text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .form-group {
@@ -53,61 +66,70 @@
 
         label {
             display: block;
-            color: var(--form-brown);
+            color: var(--deep-red);
             font-size: 0.8rem;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 700;
+            letter-spacing: 0.5px;
+            padding-left: 5px;
         }
 
         input {
             width: 100%;
-            background: white;
-            border: 2px solid #E0E0E0;
-            border-radius: 8px;
-            color: var(--text-accent);
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            color: var(--text-dark);
             font-size: 1rem;
-            padding: 12px 15px;
+            padding: 15px 18px;
             outline: none;
-            transition: 0.3s;
+            transition: all 0.3s ease;
             box-sizing: border-box;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
 
         input:focus {
-            border-color: var(--form-brown);
-            box-shadow: 0 0 10px rgba(93, 64, 55, 0.1);
+            background: #fff;
+            border-color: var(--vibrant-red);
+            box-shadow: 0 0 0 5px rgba(255, 59, 48, 0.2);
         }
 
         .error-message {
-            background: rgba(211, 47, 47, 0.1);
-            color: var(--error-red);
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
+            background: rgba(211, 47, 47, 0.15);
+            color: var(--deep-red);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid rgba(211, 47, 47, 0.2);
         }
 
         button {
             width: 100%;
-            padding: 15px;
-            background: var(--form-brown);
+            padding: 18px;
+            background: linear-gradient(to right, var(--vibrant-red), var(--deep-red));
             border: none;
-            border-radius: 8px;
-            color: #FFDAB9;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 900;
-            letter-spacing: 4px;
+            border-radius: 16px;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: 2px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 15px;
+            box-shadow: 0 10px 30px rgba(183, 28, 28, 0.4);
             text-transform: uppercase;
         }
 
         button:hover {
-            background: var(--text-accent);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(183, 28, 28, 0.6);
+        }
+
+        button:active {
+            transform: translateY(-1px);
         }
     </style>
 </head>

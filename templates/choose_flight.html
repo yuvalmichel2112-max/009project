@@ -3,170 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlyTAU | Select Your Flight</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>FlyTAU | Available Flights</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Orbitron:wght@800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-deep: #0a0b0d;
-            --card-graphite: #16181c;
-            --emerald: #10b981;
-            --emerald-glow: rgba(16, 185, 129, 0.15);
-            --border: rgba(255, 255, 255, 0.05);
+            --flytau-purple: #2E0249;
+            --flytau-plum: #5D3A76;
+            --flytau-orange: #FF8C00;
+            --glass-bg: rgba(255, 255, 255, 0.05);
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at top, #1c1f24 0%, var(--bg-deep) 100%);
             margin: 0;
+            padding: 0;
+            font-family: 'Comfortaa', cursive;
+            background-color: var(--flytau-purple);
+            /* רקע סגול עמוק עם טפט לוגואים עדין ויוקרתי */
+            background-image:
+                radial-gradient(circle at center, rgba(93, 58, 118, 0.4) 0%, var(--flytau-purple) 100%),
+                url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
             color: white;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            padding: 50px 20px;
+            padding: 40px 20px;
+        }
+
+        /* כרטיסיית הזכוכית המרכזית */
+        .main-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 60px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+            text-align: center;
         }
 
         h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            letter-spacing: 5px;
-            margin-bottom: 40px;
+            font-size: 3rem;
+            letter-spacing: 8px;
             text-transform: uppercase;
-            text-align: center;
+            margin-bottom: 50px;
             color: white;
         }
 
-        h1 span { color: var(--emerald); }
-
-        .table-container {
-            width: 100%;
-            max-width: 1100px;
-            background: var(--card-graphite);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-        }
+        h1 span { color: var(--flytau-orange); }
 
         table {
             width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        thead {
-            background: rgba(16, 185, 129, 0.05);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            border-collapse: separate;
+            border-spacing: 0 15px; /* מרווח בין השורות ליצירת מראה של כרטיסים צפים */
         }
 
         th {
-            padding: 25px;
-            color: var(--emerald);
-            border-bottom: 2px solid var(--border);
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            color: var(--flytau-orange);
+            padding: 20px;
+            border-bottom: 2px solid rgba(255, 140, 0, 0.2);
+        }
+
+        tr {
+            transition: transform 0.3s ease;
         }
 
         td {
-            padding: 20px 25px;
-            border-bottom: 1px solid var(--border);
-            font-size: 1rem;
-            color: #e2e8f0;
+            padding: 25px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        tr:hover {
-            background: rgba(255, 255, 255, 0.02);
-            transition: 0.3s;
-        }
+        /* עיגול פינות לשורות */
+        td:first-child { border-radius: 20px 0 0 20px; border-left: 1px solid rgba(255, 255, 255, 0.05); }
+        td:last-child { border-radius: 0 20px 20px 0; border-right: 1px solid rgba(255, 255, 255, 0.05); }
 
         .code {
-            font-weight: 800;
-            color: white;
-            font-size: 1.2rem;
-        }
-
-        .price {
-            font-weight: 700;
-            color: var(--emerald);
-        }
-
-        .select-btn {
-            background: transparent;
-            border: 1px solid var(--emerald);
-            color: var(--emerald);
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
-            transition: 0.3s;
-            text-transform: uppercase;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: white;
         }
 
-        .select-btn:hover {
-            background: var(--emerald);
-            color: var(--bg-deep);
-            box-shadow: 0 0 20px var(--emerald-glow);
+        /* --- כפתור המחיר החדש --- */
+        .price-btn {
+            display: block;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 140, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: var(--flytau-orange);
+            background: rgba(255, 140, 0, 0.03);
+        }
+
+        .price-btn:hover {
+            background: var(--flytau-orange);
+            color: var(--flytau-purple);
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 140, 0, 0.4);
+        }
+
+        .price-val {
+            display: block;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .price-label {
+            display: block;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            opacity: 0.8;
         }
 
         .no-flights {
-            padding: 100px;
-            text-align: center;
             font-family: 'Orbitron', sans-serif;
-            letter-spacing: 2px;
-            color: #4b5563;
+            padding: 100px;
+            opacity: 0.4;
+            letter-spacing: 5px;
         }
     </style>
 </head>
 <body>
 
-    <h1>AVAILABLE <span>FLIGHTS</span></h1>
+    <div class="main-card">
+        <h1>AVAILABLE <span>FLIGHTS</span></h1>
 
-    <div class="table-container">
         {% if flights %}
         <table>
             <thead>
                 <tr>
-                    <th>From</th>
-                    <th>To</th>
+                    <th>Route</th>
                     <th>Departure</th>
                     <th>Landing</th>
                     <th>Economy</th>
                     <th>Business</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                {% for flight in flights %}
+                {% for f in flights %}
                 <tr>
-                    <td class="code">{{ flight.origin_code }}</td>
-                    <td class="code">{{ flight.destination_code }}</td>
-                    <td>{{ flight.departure_time }}</td>
-                    <td>{{ flight.landing_time }}</td>
-                    <td class="price">${{ flight.price_economy }}</td>
-                    <td class="price">
-                        {% if flight.has_business %}
-                            ${{ flight.price_business }}
-                        {% else %}
-                            <span style="color: #4b5563; font-size: 0.8rem;">N/A</span>
-                        {% endif %}
-                    </td>
+                    <td class="code">{{ f.origin_code }} ✈ {{ f.destination_code }}</td>
+                    <td>{{ f.departure_time }}</td>
+                    <td>{{ f.landing_time }}</td>
+
                     <td>
-                        <form action="/book_flight" method="POST">
-                            <input type="hidden" name="flight_id" value="{{ flight.flight_id }}">
-                            <button type="submit" class="select-btn">Select</button>
-                        </form>
+                        <a href="{{ url_for('select_seats', flight_id=f.flight_id, department_type='Economy') }}" class="price-btn">
+                            <span class="price-label">Select</span>
+                            <span class="price-val">${{ f.price_economy }}</span>
+                        </a>
+                    </td>
+
+                    <td>
+                        {% if f.has_business %}
+                            <a href="{{ url_for('select_seats', flight_id=f.flight_id, department_type='Business') }}" class="price-btn">
+                                <span class="price-label">Select</span>
+                                <span class="price-val">${{ f.price_business }}</span>
+                            </a>
+                        {% else %}
+                            <div style="opacity: 0.2; font-size: 0.8rem;">NOT AVAILABLE</div>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         {% else %}
-        <div class="no-flights">
-            NO FLIGHTS FOUND FOR THIS CRITERIA
-        </div>
+        <div class="no-flights">NO FLIGHTS MATCH YOUR CRITERIA</div>
         {% endif %}
     </div>
 

@@ -49,20 +49,21 @@ def get_department_dimensions(flight_id, department_type):
         query = """
             SELECT d.number_of_rows, d.number_of_columns 
             FROM department AS d 
-            JOIN flights AS f ON f.airplane_id = d.airplane_id 
-            WHERE f.flight_id = %s AND d.department_type = %s
-        """
+            JOIN flight AS f ON f.airplane_id = d.airplane_id 
+            WHERE f.flight_id = %s AND d.department_type = %s"""
         cursor.execute(query,(flight_id,department_type))
         result = cursor.fetchone()
         if result:
-            rows = result.get("number_of_rows",0)
-            columns = result.get("number_of_columns",0)
-            return rows, columns
+            return result[0], result[1]
         return 0,0
 
 def get_occupied_seats(flight_id,department_type):
     with db_cur() as cursor:
-        query = "SELECT s.row_number, s.column_number FROM seats AS s WHERE s.status=occupied, flight_id=%s, department_type=%s "
+        query = """SELECT s.row_number, s.column_number
+                    FROM seats AS s     
+                    WHERE s.status='occupied'
+                    AND flight_id=%s
+                     AND department_type=%s """
         cursor.execute(query, (flight_id,department_type))
         occupied_seats = cursor.fetchall()
         occupied = [f"{occupied_seats[0]}-{occupied_seats[1]}" for seat in occupied_seats]

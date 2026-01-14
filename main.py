@@ -1,5 +1,4 @@
 from flask import Flask, request, session, render_template, url_for
-
 import utils
 from flask_session import Session
 from werkzeug.utils import redirect
@@ -11,7 +10,6 @@ from datetime import date
 app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
-
 
 @app.route("/", methods=["GET", "POST"])
 def home_page():
@@ -28,9 +26,6 @@ def home_page():
         else:
             return render_template("home_page.html", error="Incorrect email or password")
     return render_template("home_page.html")
-
-
-
 
 # @app.route("/continue_as_guest", methods = ["POST"])
 # def continue_as_guest():
@@ -102,40 +97,41 @@ def search_flights():
 
 @app.route("/choose_flight", methods = ["GET", "POST"])
 def choose_flight():
-    origin = request.args.get('origin')
-    destination = request.args.get('destination')
-    flight_date = request.args.get('flight_date')
+    origin_city = request.args.get('origin_city')
+    destination_city = request.args.get('dest_city')
+    flight_date = request.args.get('date')
     passengers = request.args.get('passengers')
-    query = """SELECT f.*, r.duration,o.code as origin_code, d.code as destination_code
-            FROM flight f
-            JOIN flight_route AS r 
-            ON f.flight_route_origin_airport_code = r.origin_airport_code 
-            AND f.flight_route_destination_airport_code = r.destination_airport_code
-            JOIN airport AS o ON f.flight_route_origin_airport_code = o.code
-            JOIN airport AS d ON f.flight_route_destination_airport_code = d.code
-            WHERE f.flight_route_origin_airport_code = %s 
-            AND f.flight_route_destination_airport_code = %s 
-            AND DATE(f.departure_datetime) = %s"""
+    query = """SELECT f.*, r.duration, o.code as origin_code, d.code as destination_code
+                FROM flight f
+                JOIN flight_route AS r 
+                ON f.flight_route_origin_airport_code = r.origin_airport_code 
+                AND f.flight_route_destination_airport_code = r.destination_airport_code
+                JOIN airport AS o ON f.flight_route_origin_airport_code = o.code
+                JOIN airport AS d ON f.flight_route_destination_airport_code = d.code
+                WHERE o.city = %s 
+                AND d.city = %s 
+                AND DATE(f.departure_datetime) = %s
+            """
     with db_cur() as cursor:
-        cursor.execute(query,(origin,destination, flight_date))
+        cursor.execute(query,(origin_city,destination_city, flight_date))
         db_flights = cursor.fetchall()
         processed_flights = []
         for flight in db_flights:
-            departure_date, landing_date=utils.get_time_display(flight['departure_time'], flight['duration'])
+            departure_date, landing_date=utils.get_time_display(flight['Departure_datetime'], flight['duration'])
             flight_info = {
-                'flight_id': flight['id'],
+                'flight_id': flight['ID'],
                 'status': flight['status'],
                 'origin_code': flight['origin_code'],
                 'destination_code': flight['destination_code'],
                 'departure_time': departure_date,
                 'landing_time': landing_date,
                 'duration': f"{flight['duration']}h",
-                'price_economy': flight['price_economy'],
-                'price_business': flight['price_business'] if flight['business_seats_count'] > 0 else "N/A",
-                'has_business': True if flight['business_seats_count'] > 0 else False
+                'price_economy': flight['Economy_price'],
+                'price_business': flight['Business_price'] if flight['Business_price'] else "N/A",
+                'has_business': True if flight['Business_price'] else False
             }
             processed_flights.append(flight_info)
-        return render_template("/choose_flight.html",flights=processed_flights, passengers=passengers)
+        return render_template("choose_flight.html", flights=processed_flights, passengers=passengers)
 
 # @app.route("/flights", methods = ["GET"])
 # def show_flights():
@@ -162,19 +158,25 @@ def choose_flight():
 #         except mysql.connector.Error as err:
 #             print(f"Database error: {err}")
 
-@app.route("/flight/<flight_id>/seats/<department_type>", methods = ["GET", "POST"]) ### לא יודעות מה לכתוב פה
-def select_seats():
-    flight_id = session.get['flight_id']
-    department_type = session.get['department_type']
-    occupied = get_occupied_seats(flight_id, department_type)
-    rows, cols = get_department_dimensions(flight_id, department_type)
+@app.route("/select_seats/<flight_id>/<department_type>", methods=["GET", "POST"])
+def select_seats(flight_id, department_type):
+    occupied = utils.get_occupied_seats(flight_id, department_type)
+    rows, cols = utils.get_department_dimensions(flight_id, department_type)
     if request.method == 'POST':
-        selected = request.form.getlist("seat_choice")
+        selected_seat = request.form.get("selected_seat")
+        if selected_seat:
+            session['selected_seat'] = selected_seat
+            return redirect(url_for('payment'))
+    return render_template("select_seats.html",
+                           rows=rows,
+                           cols=cols,
+                           occupied=occupied,
+                           dept=department_type,
+                           flight_id=flight_id)
 
 # save_booking(session['email'], selected, flight_id) #האם ואיך צריכה להיות הפרדה בין לקוח רשום ללקוח ואיך ?
 #         return (f"seats booked for {flight_id}")
 #     return render_template("seats.html", rows = rows, cols = cols, flight_id = flight_id, occupied = occupied)
-#
 
 @app.route("/managers_log_in", methods=["GET", "POST"])
 def managers_log_in():
@@ -191,7 +193,6 @@ def managers_log_in():
             else:
                 return render_template("managers_log_in.html", error="ID or Password incorrect")
     return render_template("managers_log_in.html")
-
 
 @app.route("/managers_home_page", methods=["GET"])
 def managers_home_page():
