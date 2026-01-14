@@ -45,32 +45,30 @@ def get_time_display(departure_time, duration):
     return departure_display, landing_display
 
 def get_department_dimensions(flight_id, department_type):
-    department_map =
     with db_cur() as cursor:
-        query = """
-            SELECT d.Number_of_rows, d.Number_of_columns 
-            FROM Department AS d 
-            JOIN Flight AS f ON f.Airplane_id = d.Airplane_id 
-            WHERE f.id = %s AND d.type = %s"""
+        query = """SELECT d.Number_of_rows, d.Number_of_columns 
+                FROM Department AS d 
+                JOIN Flight AS f ON f.Airplane_id = d.Airplane_id 
+                WHERE f.id = %s AND d.type = %s"""
         cursor.execute(query,(flight_id,department_type))
         result = cursor.fetchone()
         if result:
+            if isinstance(result, dict):
+                return result['Number_of_rows'], result['Number_of_columns']
             return result[0], result[1]
-        return 0,0
+        return 0, 0
 
-def get_occupied_seats(flight_id,department_type):
+def get_occupied_seats(flight_id, department_type):
     with db_cur() as cursor:
-        query = """SELECT Row_number, Column_number FROM Seat_by_guest 
-                    WHERE Department_Type = %s AND Booking_by_guest_ID IN 
-                    (SELECT ID FROM Booking_by_guest WHERE Flight_ID = %s)
-                    UNION
-                    SELECT Row_number, Column_number FROM Seat_by_registered_costumers 
-                    WHERE Department_Type = %s AND Booking_by_registered_costumers_ID IN 
-                    (SELECT ID FROM Booking_by_registered_costumers WHERE Flight_ID = %s)
-                """
-        cursor.execute(query, (flight_id,department_type))
+        query = """SELECT t.Seat_row, t.Seat_col
+                FROM Ticket AS t
+                JOIN Booking AS b ON t.Booking_ID = b.ID
+                WHERE t.Flight_ID = %s 
+                AND t.Department_type = %s 
+                AND b.Status != 'canceled'"""
+        cursor.execute(query, (flight_id, department_type))
         occupied_seats = cursor.fetchall()
-        occupied = [f"{occupied_seats[0]}-{occupied_seats[1]}" for seat in occupied_seats]
+        occupied = [f"{seat[0]}-{seat[1]}" for seat in occupied_seats]
         return occupied
 
 def save_booking(email, selected_seats, flight_id):
