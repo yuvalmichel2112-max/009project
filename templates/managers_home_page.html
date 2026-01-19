@@ -160,7 +160,39 @@
     </style>
 </head>
 <body>
-
+<div style="position: absolute; top: 20px; right: 20px; z-index: 1000;">
+    {% if session.get('managers_ID') %}
+        <a href="{{ url_for('logout') }}"
+           style="background-color: #FF007F;
+                  color: white;
+                  border: 2px solid #D2042D;
+                  padding: 8px 18px;
+                  text-decoration: none;
+                  border-radius: 25px;
+                  font-weight: 800;
+                  font-family: 'Montserrat', sans-serif;
+                  box-shadow: 0 4px 15px rgba(210, 4, 45, 0.3);
+                  transition: 0.3s;
+                  font-size: 0.75rem;">
+           Logout
+        </a>
+    {% elif session.get('customer_email') %}
+        <a href="{{ url_for('logout') }}"
+           style="background-color: #FF6B00;
+                  color: white;
+                  border: 2px solid #2E0249;
+                  padding: 8px 18px;
+                  text-decoration: none;
+                  border-radius: 25px;
+                  font-weight: 800;
+                  font-family: 'Montserrat', sans-serif;
+                  box-shadow: 0 4px 15px rgba(46, 2, 73, 0.3);
+                  transition: 0.3s;
+                  font-size: 0.75rem;">
+           Logout
+        </a>
+    {% endif %}
+</div>
 <div class="dashboard-container">
     <div class="welcome-section">
         <h1>Hello {{name}}</h1>
@@ -195,11 +227,11 @@
         <div class="mgmt-section">
             <h3>Management Reports</h3>
             <div class="link-list">
-                <a href="report_1" class="action-link report-link">Global Occupancy</a>
-                <a href="report_2" class="action-link report-link">Revenue Analytics</a>
-                <a href="report_3" class="action-link report-link">Employee Flight Hours</a>
-                <a href="report_4" class="action-link report-link">Cancellation Rates</a>
-                <a href="report_5" class="action-link report-link">Aircraft Activity</a>
+                <a href="report1" class="action-link report-link">Global Occupancy</a>
+                <a href="report2" class="action-link report-link">Revenue Analytics</a>
+                <a href="report3" class="action-link report-link">Employee Flight Hours</a>
+                <a href="report4" class="action-link report-link">Cancellation Rates</a>
+                <a href="report5" class="action-link report-link">Top Popular Destinations</a>
             </div>
         </div>
 

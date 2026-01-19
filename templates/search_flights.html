@@ -190,7 +190,65 @@
     </style>
 </head>
 <body>
-
+<div style="position: absolute; top: 20px; right: 20px; z-index: 1000;">
+    {% if session.get('managers_ID') %}
+        <a href="{{ url_for('logout') }}"
+           style="background-color: #FF007F; /* ורוד */
+                  color: white;
+                  border: 2px solid #D2042D; /* אדום */
+                  padding: 8px 18px;
+                  text-decoration: none;
+                  border-radius: 25px;
+                  font-weight: 800;
+                  font-family: 'Montserrat', sans-serif;
+                  box-shadow: 0 4px 15px rgba(210, 4, 45, 0.3);
+                  transition: 0.3s;
+                  font-size: 0.75rem;">
+           Logout
+        </a>
+    {% elif session.get('customer_email') %}
+        <a href="{{ url_for('logout') }}"
+           style="background-color: #FF6B00;
+                  color: white;
+                  border: 2px solid #2E0249;
+                  padding: 8px 18px;
+                  text-decoration: none;
+                  border-radius: 25px;
+                  font-weight: 800;
+                  font-family: 'Montserrat', sans-serif;
+                  box-shadow: 0 4px 15px rgba(46, 2, 73, 0.3);
+                  transition: 0.3s;
+                  font-size: 0.75rem;">
+           Logout
+        </a>
+    {% endif %}
+</div>
+<div style="position: absolute; top: 20px; left: 20px; z-index: 1000;">
+    <a href="{{ url_for('booking_management') }}"
+       style="background-color: #FF6B00; /* כתום מותג */
+              color: white;
+              border: 2px solid #2E0249; /* סגול מותג */
+              padding: 10px 20px;
+              text-decoration: none;
+              border-radius: 30px;
+              font-weight: 800;
+              font-family: 'Montserrat', sans-serif;
+              box-shadow: 0 4px 15px rgba(46, 2, 73, 0.3);
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              transition: 0.3s;
+              font-size: 0.9rem;">
+        <span style="font-size: 1.2rem;">✈</span> Manage Your Flight
+    </a>
+</div>
+<style>
+    div a:hover {
+        transform: scale(1.05);
+        background-color: #2E0249 !important; /* הופך לסגול בריחוף */
+        border-color: #FF6B00 !important;   /* מסגרת כתומה בריחוף */
+    }
+</style>
 <div id="dynamic-bg-image"></div>
 <div id="bg-overlay"></div>
 <div class="form-card">

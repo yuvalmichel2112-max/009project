@@ -3,8 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f9; }
+        .container { background: white; width: 85%; margin: 50px auto; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; }
+        p { color: #666; margin-bottom: 30px; }
+        img { max-width: 100%; height: auto; border: 1px solid #ddd; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-top: 20px; }
+    </style>
 </head>
 <body>
+<div class="container">
+        <h1>Employee Flight Hours Breakdown</h1>
+        <p>Comparison of long-haul vs. short-haul flight hours per employee.</p>
 
+        <img src="{{ url_for('static', filename=graph_image) }}" alt="Employee Hours Graph">
+
+        <br>
+        <button onclick="window.history.back()">Back to Dashboard</button>
+    </div>
 </body>
 </html>
