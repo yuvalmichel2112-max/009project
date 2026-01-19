@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FlyTAU | Manage Bookings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --brand-orange: #FF6B00; --brand-purple: #2E0249; }
+        body { font-family: 'Montserrat', sans-serif; background: #1a091d; color: white; padding: 40px; }
+
+        .header-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        h1 { color: var(--brand-orange); font-weight: 800; }
+
+        .history-btn {
+            text-decoration: none; color: white; border: 2px solid var(--brand-orange);
+            padding: 10px 20px; border-radius: 30px; font-weight: 600; transition: 0.3s;
+        }
+        .history-btn:hover { background: var(--brand-orange); }
+
+        table { width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.05); border-radius: 15px; overflow: hidden; }
+        th { background: var(--brand-purple); color: var(--brand-orange); padding: 15px; text-transform: uppercase; font-size: 0.8rem; }
+        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
+
+        .cancel-btn { background: #FF007F; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+        /* Modal (Popup) Style */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
+        .modal-content { background: var(--brand-purple); margin: 15% auto; padding: 30px; border: 2px solid var(--brand-orange); width: 350px; border-radius: 20px; text-align: center; }
+        .modal-btns { display: flex; justify-content: space-around; margin-top: 25px; }
+        .btn-confirm { background: var(--brand-orange); color: white; padding: 10px 25px; text-decoration: none; border-radius: 10px; font-weight: bold; }
+        .btn-close { background: #555; color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="header-area">
+        <h1>Upcoming Journeys</h1>
+        <a href="/booking_history" class="history-btn">View Your Booking History</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Booking ID</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Order Date</th>
+                <th>Departure</th>
+                <th>Landing</th>
+                <th>Tickets</th>
+                <th>Total Price</th>
+                <th>Cancel</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for b in bookings %}
+            <tr>
+                <td>#{{ b.booking_id }}</td>
+                <td>{{ b.origin_city }}</td>
+                <td>{{ b.destination_city }}</td>
+                <td>{{ b.Booking_date.strftime('%d/%m/%Y') }}</td>
+                <td>{{ b.dep_time.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{{ b.landing_time.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{{ b.num_tickets }}</td>
+                <td style="color: var(--brand-orange); font-weight: bold;">${{ b.total_price }}</td>
+                <td>
+                    <button class="cancel-btn" onclick="openModal('{{ b.booking_id }}')">Cancel</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="cancelModal" class="modal">
+        <div class="modal-content">
+            <h2 style="color: white;">Are you sure?</h2>
+            <p>Do you really want to cancel booking #<span id="displayID"></span>?</p>
+            <div class="modal-btns">
+                <a id="yesBtn" href="#" class="btn-confirm">YES</a>
+                <button class="btn-close" onclick="closeModal()">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(id) {
+            document.getElementById('displayID').innerText = id;
+            document.getElementById('yesBtn').href = "/cancel_order/" + id;
+            document.getElementById('cancelModal').style.display = "block";
+        }
+        function closeModal() {
+            document.getElementById('cancelModal').style.display = "none";
+        }
+    </script>
+</body>
+</html>

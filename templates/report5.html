@@ -3,8 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background-color: #f0f2f5; }
+
+        .header-section { margin-top: 40px; margin-bottom: 40px; }
+        h1 { color: #2c3e50; font-size: 2.5em; margin-bottom: 10px; }
+        p { color: #7f8c8d; font-size: 1.2em; }
+
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+        .card {
+            background: white;
+            width: 250px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            border-top: 5px solid transparent;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .rank-1 { border-top-color: #f1c40f; }
+        .rank-2 { border-top-color: #95a5a6; }
+        .rank-3 { border-top-color: #cd7f32; }
+
+        .medal { font-size: 3em; display: block; margin-bottom: 10px; }
+        .city-name { font-size: 1.8em; font-weight: bold; color: #34495e; margin: 10px 0; }
+        .flight-count { font-size: 1.2em; color: #16a085; font-weight: bold; }
+        .label { font-size: 0.9em; color: #95a5a6; text-transform: uppercase; letter-spacing: 1px; }
+
+        button { padding: 12px 25px; font-size: 16px; cursor: pointer; margin-top: 40px; background-color: #34495e; color: white; border: none; border-radius: 5px; }
+        button:hover { background-color: #2c3e50; }
+    </style>
 </head>
 <body>
+<div style="position: absolute; top: 20px; right: 20px; z-index: 1000;">
+    {% if session.get('managers_ID') %}
+        <a href="{{ url_for('logout') }}"
+           style="background-color: #FF007F;
+                  color: white;
+                  border: 2px solid #D2042D;
+                  padding: 8px 18px;
+                  text-decoration: none;
+                  border-radius: 25px;
+                  font-weight: 800;
+                  font-family: 'Montserrat', sans-serif;
+                  box-shadow: 0 4px 15px rgba(210, 4, 45, 0.3);
+                  transition: 0.3s;
+                  font-size: 0.75rem;">
+           Logout
+        </a>
+    {% elif session.get('customer_email') %}
+        <a href="{{ url_for('logout') }}"
+           style="background-color: #FF6B00;
+                  color: white;
+                  border: 2px solid #2E0249;
+                  padding: 8px 18px;
+                  text-decoration: none;
+                  border-radius: 25px;
+                  font-weight: 800;
+                  font-family: 'Montserrat', sans-serif;
+                  box-shadow: 0 4px 15px rgba(46, 2, 73, 0.3);
+                  transition: 0.3s;
+                  font-size: 0.75rem;">
+           Logout
+        </a>
+    {% endif %}
+</div>
+<div class="header-section">
+        <h1>Top 3 Popular Destinations</h1>
+        <p>Most frequent routes flown by our fleet</p>
+    </div>
 
+    <div class="cards-container">
+        {% for dest in destinations %}
+
+            <div class="card rank-{{ dest.rank }}">
+                <span class="medal">
+                    {% if dest.rank == 1 %} 🥇
+                    {% elif dest.rank == 2 %} 🥈
+                    {% else %} 🥉
+                    {% endif %}
+                </span>
+
+                <div class="city-name">{{ dest.city }}</div>
+
+                <div class="flight-count">{{ dest.flights }}</div>
+                <div class="label">Flights</div>
+            </div>
+
+        {% endfor %}
+    </div>
+
+    <button onclick="window.history.back()">Back to Dashboard</button>
 </body>
 </html>
