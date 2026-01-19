@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlyTAU | Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500;700&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600&family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
         :root {
             --eggplant: #2E0249;
@@ -16,7 +16,7 @@
             margin: 0;
             padding: 0;
             height: 100vh;
-            font-family: 'Comfortaa', cursive;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, var(--eggplant) 0%, var(--plum) 50%, var(--orange) 160%);
             display: flex;
             justify-content: center;
@@ -29,78 +29,84 @@
         body::before {
             content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background-image: url("{{ url_for('static', filename='images/FlyTAU-logo.png') }}");
-            background-size: 140px;
+            background-size: 180px;
             background-repeat: repeat;
-            opacity: 0.05;
+            opacity: 0.02;
             z-index: 0;
             pointer-events: none;
         }
 
+        .static-airplane {
+            position: absolute;
+            width: 750px;
+            z-index: 1;
+            top: 10%;
+            left: -15%;
+            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.6));
+            opacity: 0.85;
+            animation: drift 40s ease-in-out infinite;
+        }
+
+        @keyframes drift {
+            0%, 100% { transform: translate(0, 0) rotate(2deg); }
+            50% { transform: translate(40px, -20px) rotate(-1deg); }
+        }
+
         .login-card {
             position: relative;
-            z-index: 1;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 60px 40px;
-            border-radius: 50px;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: none;
+            padding: 70px 50px;
+            border-radius: 30px;
             text-align: center;
             width: 100%;
-            max-width: 420px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            max-width: 380px;
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.5);
         }
 
         h1 {
             font-family: 'Orbitron', sans-serif;
             font-size: 3.2rem;
-            margin: 0 0 5px 0;
+            margin: 0;
             letter-spacing: 6px;
             font-weight: 900;
-            background: linear-gradient(to bottom, #ffffff 60%, var(--orange) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
-            text-transform: uppercase;
-        }
-
-        h2 {
-            font-weight: 300;
-            font-size: 1rem;
-            margin-bottom: 45px;
-            opacity: 0.9;
-            letter-spacing: 1.5px;
             color: white;
         }
 
-        .input-group {
-            margin-bottom: 20px;
+        h1 span { color: var(--orange); }
+
+        h2 {
+            font-weight: 200;
+            font-size: 0.85rem;
+            margin-bottom: 50px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0.6;
         }
+
+        .input-group { margin-bottom: 15px; }
 
         input[type="email"], input[type="password"] {
             width: 100%;
             padding: 18px 25px;
             background: rgba(255, 255, 255, 0.98);
-            border: 2px solid transparent;
-            border-radius: 30px;
-            font-size: 1rem;
-            font-family: 'Comfortaa', cursive;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
             color: var(--eggplant);
             box-sizing: border-box;
             outline: none;
-            transition: 0.4s ease;
+            transition: 0.3s;
         }
 
         input:focus {
-            background: white;
-            border-color: var(--orange);
-            box-shadow: 0 0 20px rgba(255, 140, 0, 0.2);
-            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
         }
 
         input[type="submit"] {
@@ -109,92 +115,73 @@
             background: var(--orange);
             color: white;
             border: none;
-            border-radius: 30px;
-            font-family: 'Comfortaa', cursive;
-            font-weight: 700;
-            font-size: 1.2rem;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
             cursor: pointer;
             transition: 0.3s;
-            margin-top: 15px;
-            box-shadow: 0 10px 25px rgba(255, 140, 0, 0.3);
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         input[type="submit"]:hover {
             background: #ff9d26;
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(255, 140, 0, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(255, 140, 0, 0.3);
         }
 
         .footer-links {
-            margin-top: 35px;
+            margin-top: 40px;
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 40px;
         }
 
         .footer-links a {
             color: white;
             text-decoration: none;
-            font-size: 0.9rem;
-            opacity: 0.7;
+            font-size: 0.8rem;
+            opacity: 0.5;
             transition: 0.3s;
-            font-weight: 500;
-            border-bottom: 1px solid transparent;
+            letter-spacing: 1px;
         }
 
-        .footer-links a:hover {
-            opacity: 1;
-            color: var(--orange);
-            border-bottom: 1px solid var(--orange);
-        }
+        .footer-links a:hover { opacity: 1; color: var(--orange); }
 
         .admin-btn {
             position: absolute;
             top: 40px;
             left: 40px;
-            padding: 12px 25px;
+            padding: 10px 20px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
             color: white;
             text-decoration: none;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 1px;
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            z-index: 3;
             transition: 0.3s;
-            backdrop-filter: blur(10px);
         }
+        .admin-btn:hover { background: rgba(255, 255, 255, 0.1); }
 
-        .admin-btn:hover {
-            background: white;
-            color: var(--eggplant);
-        }
-
-        .error-msg {
-            background: rgba(255, 77, 77, 0.2);
-            border: 1px solid #ff4d4d;
-            padding: 12px;
-            border-radius: 20px;
-            margin-bottom: 25px;
-            font-size: 0.85rem;
-        }
     </style>
 </head>
 <body>
 
+    <img src="{{ url_for('static', filename='images/airplane.png') }}" class="static-airplane" alt="">
+
     <a href="/managers_log_in" class="admin-btn">MANAGER ACCESS</a>
 
     <div class="login-card">
-
-        <h1>FlyTAU</h1>
-        <h2>Taking home wherever you go</h2>
+        <h1>Fly<span>TAU</span></h1>
+        <h2>Order Your Dream Trip</h2>
 
         <form action="/" method="POST">
-            {% if error %}
-            <div class="error-msg">
-                {{ error }}
-            </div>
-            {% endif %}
+            {% if error %}<div style="color: #ff4d4d; margin-bottom: 20px; font-size: 0.8rem;">{{ error }}</div>{% endif %}
 
             <div class="input-group">
                 <input type="email" name="registered_email" placeholder="Email" required>
@@ -204,11 +191,11 @@
                 <input type="password" name="registered_password" placeholder="Password" required>
             </div>
 
-            <input type="submit" value="Sign In">
+            <input type="submit" value="Log In">
 
             <div class="footer-links">
-                <a href="/sign_up">Sign Up</a>
-                <a href="/search_flights">Continue As Guest</a>
+                <a href="/sign_up">Register</a>
+                <a href="/search_flights">Guest access</a>
             </div>
         </form>
     </div>
