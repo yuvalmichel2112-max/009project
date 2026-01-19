@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>FlyTAU | Sign Up</title>
+    <title>FlyTAU | Customer Details</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 
     <style>
@@ -19,7 +19,6 @@
             background: linear-gradient(-45deg, var(--deep-plum), var(--mid-plum), var(--vibrant-orange), var(--dark-purple));
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
-            /* ----------------------- */
             margin: 0;
             display: flex;
             justify-content: center;
@@ -98,10 +97,6 @@
             box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
         }
 
-        input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
         .btn-secondary {
             background: rgba(255, 255, 255, 0.1);
             border: 1px dashed rgba(255, 255, 255, 0.5);
@@ -122,7 +117,7 @@
             color: var(--accent-orange);
         }
 
-        input[type="submit"] {
+        .btn-submit {
             grid-column: span 2;
             background: linear-gradient(45deg, var(--accent-orange), #FF6B00);
             color: white;
@@ -136,63 +131,75 @@
             text-transform: uppercase;
             transition: all 0.4s;
             box-shadow: 0 10px 20px rgba(255, 107, 0, 0.3);
+            font-family: 'Montserrat', sans-serif;
         }
 
-        input[type="submit"]:hover {
+        .btn-submit:hover {
             transform: translateY(-3px) scale(1.02);
             box-shadow: 0 15px 30px rgba(255, 107, 0, 0.5);
         }
 
-        #Extra_Phone input {
-            margin-top: 15px;
-            width: 100%;
-            box-sizing: border-box;
+        .mt-2 {
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
 <div class="form-card">
-    <h2>Join FlyTAU</h2>
-    <form action="/sign_up" method="POST" class="form-grid">
+    <h2>Customer Information</h2>
+    <form action="/submit-booking" method="POST" class="form-grid">
 
         <div class="input-group">
             <label>First Name</label>
-            <input type="text" name="first_name" placeholder="Your First Name" required>
-        </div>
-        <div class="input-group">
-            <label>Last Name</label>
-            <input type="text" name="last_name" placeholder="Your Last Name" required>
+            <input type="text" name="first_name"
+                   value="{{ customer.First_name if customer else '' }}" required>
         </div>
 
         <div class="input-group">
-            <label>Date Of Birth</label>
-            <input type="date" name="date_of_birth" max="{{today}}" required style="color-scheme: dark;">
-        </div>
-        <div class="input-group">
-            <label>Passport Number</label>
-            <input type="text" name="passport_number" placeholder="87654321" minlength="8" maxlength="8" required>
+            <label>Last Name</label>
+            <input type="text" name="last_name"
+                   value="{{ customer.Last_name if customer else '' }}" required>
         </div>
 
         <div class="input-group full-width">
             <label>Email Address</label>
-            <input type="email" name="registered_email" placeholder="israel123@mail.co.il" required>
+            <input type="email" name="email"
+                   value="{{ customer.Email if customer else '' }}" required>
         </div>
 
         <div class="input-group full-width">
-            <label>Phone Number</label>
-            <input type="tel" name="phones_list" placeholder="050-0000000" minlength="10" maxlength="10" required>
-            <div id="Extra_Phone"></div>
-            <button type="button" class="btn-secondary" onclick="addphone()">+ Add another phone number</button>
+            <label>Passport Number</label>
+            <input type="text" name="passport"
+                   value="{{ customer.Passport_number if customer else '' }}" required>
         </div>
 
         <div class="input-group full-width">
-            <label>Password</label>
-            <input type="password" name="registered_password" placeholder="Create a strong password" required>
+            <label>Date Of Birth</label>
+            <input type="date" name="birth_date"
+                value="{{ customer.Birth_date if customer else '' }}" required>
+</div>
+
+        <div class="input-group full-width">
+            <label>Phone Numbers</label>
+            <div id="Phones_Container">
+                {% if customer and customer.phones_list %}
+                    {% for phone in customer.phones_list %}
+                        <input type="tel" name="phones_list" value="{{ phone }}"
+                               minlength="10" maxlength="10" required class="mt-2" style="width: 100%; box-sizing: border-box;">
+                    {% endfor %}
+                {% else %}
+                    <input type="tel" name="phones_list" placeholder="050-0000000"
+                           minlength="10" maxlength="10" required style="width: 100%; box-sizing: border-box;">
+                {% endif %}
+                <div id="Extra_Phone"></div>
+            </div>
+            <button type="button" class="btn-secondary" onclick="addphone()">
+                + Add Another Phone Number
+            </button>
         </div>
 
-        <input type="hidden" name="date_of_registration" value="{{today}}">
-        <input type="submit" value="Sign Up Now">
+        <button type="submit" class="btn-submit">Confirm And Review Your Booking</button>
     </form>
 </div>
 
@@ -205,6 +212,15 @@
         input.placeholder = "Another Phone Number";
         input.minLength = "10";
         input.maxLength = "10";
+        input.style.width = "100%";
+        input.style.boxSizing = "border-box";
+        input.style.marginTop = "10px";
+        input.style.padding = "15px";
+        input.style.borderRadius = "12px";
+        input.style.border = "1px solid rgba(255, 255, 255, 0.3)";
+        input.style.background = "rgba(255, 255, 255, 0.15)";
+        input.style.color = "white";
+        input.style.fontFamily = "'Montserrat', sans-serif";
         container.appendChild(input);
     }
 </script>

@@ -18,7 +18,6 @@
             padding: 0;
             font-family: 'Comfortaa', cursive;
             background-color: var(--flytau-purple);
-            /* רקע סגול עמוק עם טפט לוגואים עדין ויוקרתי */
             background-image:
                 radial-gradient(circle at center, rgba(93, 58, 118, 0.4) 0%, var(--flytau-purple) 100%),
                 url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
@@ -30,7 +29,6 @@
             padding: 40px 20px;
         }
 
-        /* כרטיסיית הזכוכית המרכזית */
         .main-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(30px);
@@ -58,7 +56,7 @@
         table {
             width: 100%;
             border-collapse: separate;
-            border-spacing: 0 15px; /* מרווח בין השורות ליצירת מראה של כרטיסים צפים */
+            border-spacing: 0 15px;
         }
 
         th {
@@ -71,10 +69,6 @@
             border-bottom: 2px solid rgba(255, 140, 0, 0.2);
         }
 
-        tr {
-            transition: transform 0.3s ease;
-        }
-
         td {
             padding: 25px 20px;
             background: rgba(255, 255, 255, 0.02);
@@ -82,7 +76,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* עיגול פינות לשורות */
         td:first-child { border-radius: 20px 0 0 20px; border-left: 1px solid rgba(255, 255, 255, 0.05); }
         td:last-child { border-radius: 0 20px 20px 0; border-right: 1px solid rgba(255, 255, 255, 0.05); }
 
@@ -93,7 +86,6 @@
             color: white;
         }
 
-        /* --- כפתור המחיר החדש --- */
         .price-btn {
             display: block;
             text-decoration: none;
@@ -136,7 +128,6 @@
     </style>
 </head>
 <body>
-
     <div class="main-card">
         <h1>AVAILABLE <span>FLIGHTS</span></h1>
 
@@ -159,22 +150,22 @@
                     <td>{{ f.landing_time }}</td>
 
                     <td>
-                        <a href="{{ url_for('select_seats', flight_id=f.flight_id, department_type='Economy') }}" class="price-btn">
-                            <span class="price-label">Select</span>
-                            <span class="price-val">${{ f.price_economy }}</span>
-                        </a>
-                    </td>
+    <a href="{{ url_for('select_seats', flight_id=f.flight_id, department_type='Economy', passengers=passengers, price=f.price_economy) }}" class="price-btn">
+        <span class="price-label">Select</span>
+        <span class="price-val">${{ f.price_economy }}</span>
+    </a>
+</td>
 
-                    <td>
-                        {% if f.has_business %}
-                            <a href="{{ url_for('select_seats', flight_id=f.flight_id, department_type='Business') }}" class="price-btn">
-                                <span class="price-label">Select</span>
-                                <span class="price-val">${{ f.price_business }}</span>
-                            </a>
-                        {% else %}
-                            <div style="opacity: 0.2; font-size: 0.8rem;">-</div>
-                        {% endif %}
-                    </td>
+<td>
+    {% if f.has_business %}
+        <a href="{{ url_for('select_seats', flight_id=f.flight_id, department_type='Business', passengers=passengers, price=f.price_business) }}" class="price-btn">
+            <span class="price-label">Select</span>
+            <span class="price-val">${{ f.price_business }}</span>
+        </a>
+    {% else %}
+        <div style="opacity: 0.2; font-size: 0.8rem;">-</div>
+    {% endif %}
+</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -183,6 +174,5 @@
         <div class="no-flights">NO FLIGHTS MATCH YOUR CRITERIA</div>
         {% endif %}
     </div>
-
 </body>
 </html>
