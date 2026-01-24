@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import utils
 from flask_session import Session
 from werkzeug.utils import redirect
-from utils import db_cur, get_department_dimensions, get_occupied_seats, get_all_locations,get_reg_cus_info, add_guest_to_db, generate_unique_id,get_available_resources,get_last_location, sync_flight_statuses
+from utils import db_cur, get_department_dimensions, get_occupied_seats, get_all_locations,get_reg_cus_info, add_guest_to_db, generate_unique_id,get_available_resources,get_last_location, sync_flight_statuses, admin_required
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -13,8 +13,8 @@ from matplotlib.ticker import FuncFormatter
 import json
 
 app = Flask(__name__)
-app.config['SESSION_TYPE'] = 'filesystem'
-Session(app)
+# app.config['SESSION_TYPE'] = 'filesystem'
+# Session(app)
 app.secret_key = 'your_secret_key_here'
 
 @app.route("/", methods=["GET", "POST"])
@@ -211,8 +211,7 @@ def booking_history():
 
 @app.route("/choose_flight", methods = ["GET", "POST"])
 def choose_flight():
-    print(f"Current Session: {session}")
-    print(f"Is Admin in session? {session.get('is_admin')}")
+    print(session)
     if session.get('is_admin'):
         return redirect(url_for('managers_home_page', error="admin_forbidden"))
     sync_flight_statuses()
@@ -417,13 +416,13 @@ def managers_log_in():
             if manager:
                 session["is_admin"] = True
                 session["managers_ID"] = manager_id
-                print(f"DEBUG: Admin logged in! Session status: {session.get('is_admin')}")
                 return redirect("/managers_home_page")
             else:
                 return render_template("managers_log_in.html", error="ID or Password incorrect")
     return render_template("managers_log_in.html")
 
 @app.route("/managers_home_page", methods=["GET"])
+@admin_required
 def managers_home_page():
     if "managers_ID" not in session:
         return redirect("/managers_log_in")
@@ -442,6 +441,7 @@ def managers_home_page():
 
 
 @app.route('/report1')
+@admin_required
 def report1_page():
     sql_query = """
     SELECT (total_sold*1.0/total_capacity)*100 as global_occupancy_percentage
@@ -476,6 +476,7 @@ def report1_page():
                            percentage=occupancy_rate)
 
 @app.route('/report2')
+@admin_required
 def report2_page():
     sql_query = """
     SELECT a.size as airplane_size, a.Manufactorer as manufactorer, d.type as department_type, SUM(t.price) as total_revenue
@@ -520,6 +521,7 @@ def report2_page():
     return render_template('report2.html', graph_image=f'images/{image_filename}')
 
 @app.route('/report3')
+@admin_required
 def report3_page():
     sql_query = """
     SELECT first_name, last_name, employee_role, 
@@ -565,6 +567,7 @@ def report3_page():
     return render_template('report3.html', graph_image=f'images/{image_filename}')
 
 @app.route('/report4')
+@admin_required
 def report4_page():
     sql_query = """
     SELECT booking_year, booking_month, CONCAT(ROUND((cancelled_bookings / total_bookings) * 100, 2), '%') as cancellation_rate
@@ -597,6 +600,7 @@ def report4_page():
     return render_template('report4.html', graph_image=f'images/{image_filename}')
 
 @app.route('/report5')
+@admin_required
 def report5_page():
     sql_query = """
     SELECT a.City, COUNT(f.ID) as total_flights
@@ -622,6 +626,7 @@ def report5_page():
 
 
 @app.route('/add_new_pilot', methods=['GET', 'POST'])
+@admin_required
 def add_pilot_page():
     if "managers_ID" not in session:
         return redirect(url_for("managers_log_in"))
@@ -651,6 +656,7 @@ def add_pilot_page():
 
 
 @app.route('/add_new_flight_attendant', methods=['GET', 'POST'])
+@admin_required
 def add_attendant_page():
     if "managers_ID" not in session:
         return redirect(url_for("managers_log_in"))
@@ -684,6 +690,7 @@ def add_attendant_page():
     return render_template('add_new_flight_attendant.html', message=message)
 
 @app.route('/add_new_airplane', methods=['GET', 'POST'])
+@admin_required
 def add_airplane_page():
     if "managers_ID" not in session:
         return redirect(url_for("managers_log_in"))
@@ -717,6 +724,7 @@ def add_airplane_page():
     return render_template('add_new_airplane.html', message=message)
 
 @app.route('/cancel_flight', methods=['GET', 'POST'])
+@admin_required
 def cancel_flight_page():
     if "managers_ID" not in session:
         return redirect(url_for("managers_log_in"))
@@ -750,6 +758,7 @@ def cancel_flight_page():
                            flight_id=flight_id)
 
 @app.route('/perform_cancel', methods=['POST'])
+@admin_required
 def perform_cancel():
     if "managers_ID" not in session:
         return redirect(url_for("managers_log_in"))
@@ -782,6 +791,7 @@ def perform_cancel():
         return f"Management System Error: {e}"
 
 @app.route('/add_flight', methods=['GET', 'POST'])
+@admin_required
 def add_flight_step1():
     if request.method == 'POST':
         aircraft_size = request.form.get('aircraftSize')
@@ -807,7 +817,9 @@ def add_flight_step1():
                            airports=airports,
                            routes_json=json.dumps(routes_data))
 
+
 @app.route('/add_flight_step2', methods=['GET', 'POST'])
+@admin_required
 def add_flight_step2():
     flight_info = session.get('flight_data')
     if not flight_info:
@@ -888,6 +900,7 @@ def add_flight_step2():
                            flight_data=flight_info)
 
 @app.route('/create_flight_final')
+@admin_required
 def create_flight_final():
     flight_data = session.get('flight_data')
     resources = session.get('selected_resources')

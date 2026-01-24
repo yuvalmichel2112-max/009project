@@ -1,8 +1,8 @@
 import mysql.connector
 from contextlib import contextmanager
 from datetime import datetime, timedelta
-import random
-
+from functools import wraps
+from flask import  session, redirect
 
 def mydb():
     return mysql.connector.connect(
@@ -225,3 +225,12 @@ def sync_flight_statuses():
             cursor.execute(query_full)
     except Exception as e:
         print(f"Error updating statuses: {e}")
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("is_admin"):
+            return redirect("/")
+        return f(*args, **kwargs)
+    return decorated_function
+
