@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FlyTAU | Cancellation Confirmed</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --mgr-pink: #FF007F; --mgr-red: #D2042D; --dark-bg: #1a091d; --glass: rgba(255, 255, 255, 0.08); }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; background: linear-gradient(-45deg, var(--dark-bg), #2E0249, var(--mgr-red), var(--mgr-pink)); background-size: 400% 400%; animation: gradientBG 15s ease infinite; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .success-card {
+            width: 100%; max-width: 800px; background: var(--glass); padding: 50px; border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(25px); text-align: center;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.4);
+        }
+
+        .icon-cancel { font-size: 80px; color: #ff4d4d; margin-bottom: 20px; }
+        h1 { font-size: 2.2rem; font-weight: 800; background: linear-gradient(to right, #fff, var(--mgr-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; margin-bottom: 10px; }
+        p { opacity: 0.8; margin-bottom: 30px; }
+
+        .report-table { width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.05); border-radius: 20px; overflow: hidden; margin-bottom: 30px; }
+        .report-table th { background: rgba(255, 0, 127, 0.2); color: var(--mgr-pink); padding: 15px; text-transform: uppercase; font-size: 0.8rem; text-align: left; }
+        .report-table td { padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); text-align: left; font-size: 0.9rem; }
+
+        .total-box { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; font-weight: 800; border: 1px solid var(--mgr-pink); }
+
+        .btn-home { display: inline-block; padding: 18px 45px; background: linear-gradient(45deg, var(--mgr-red), var(--mgr-pink)); color: white; border-radius: 20px; text-decoration: none; font-weight: 900; text-transform: uppercase; margin-top: 30px; transition: 0.3s; box-shadow: 0 10px 20px rgba(210,4,45,0.3); }
+        .btn-home:hover { transform: scale(1.05); box-shadow: 0 15px 30px rgba(210,4,45,0.5); }
+    </style>
+</head>
+<body>
+
+<div class="success-card">
+    <div class="icon-cancel">✕</div>
+    <h1>Flight #{{ flight_id }} Cancelled</h1>
+    <p>The flight status has been updated and customers have been identified for refund.</p>
+
+    {% if report %}
+    <table class="report-table">
+        <thead>
+            <tr>
+                <th>Customer Name</th>
+                <th>Email Address</th>
+                <th>Refund Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in report %}
+            <tr>
+                <td>{{ row.First_name }} {{ row.Last_name }}</td>
+                <td>{{ row.Email }}</td>
+                <td style="font-weight: 800; color: #00ff7f;">${{ row.total_refund }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="total-box">
+        <span>TOTAL REFUND PROCESSED:</span>
+        <span style="font-size: 1.4rem; color: #00ff7f;">${{ total_sum }}</span>
+    </div>
+    {% else %}
+    <div class="total-box" style="justify-content: center;">
+        <span>No tickets were associated with this flight.</span>
+    </div>
+    {% endif %}
+
+    <a href="/managers_home_page" class="btn-home">Back to Dashboard</a>
+</div>
+
+</body>
+</html>

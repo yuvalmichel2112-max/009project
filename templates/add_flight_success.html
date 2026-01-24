@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FlyTAU | Flight Confirmed</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    <style>
+        :root { --mgr-pink: #FF007F; --mgr-red: #D2042D; --dark-bg: #1a091d; --glass: rgba(255, 255, 255, 0.08); }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: linear-gradient(-45deg, var(--dark-bg), #2E0249, var(--mgr-red), var(--mgr-pink)); background-size: 400% 400%; animation: gradientBG 15s ease infinite; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .success-card {
+            width: 100%; max-width: 700px; background: var(--glass); padding: 50px; border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(25px); text-align: center;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.4);
+        }
+
+        .icon-check { font-size: 80px; color: #2ecc71; margin-bottom: 20px; }
+        h1 { font-family: 'Montserrat', sans-serif; font-size: 2.2rem; background: linear-gradient(to right, #fff, var(--mgr-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; margin-bottom: 30px; }
+
+        .summary-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left;
+            background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; margin-bottom: 35px;
+        }
+
+        .summary-item label { display: block; font-size: 0.75rem; text-transform: uppercase; color: var(--mgr-pink); font-weight: 800; letter-spacing: 1px; margin-bottom: 5px; }
+        .summary-item span { font-size: 1.1rem; font-weight: 600; color: #fff; }
+
+        .full-width { grid-column: span 2; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn-home {
+            width: 100%; max-width: 350px; padding: 18px;
+            background: linear-gradient(45deg, var(--mgr-red), var(--mgr-pink));
+            color: white; border-radius: 20px; text-decoration: none; font-weight: 900;
+            text-transform: uppercase; box-shadow: 0 10px 20px rgba(210,4,45,0.3);
+            transition: 0.3s; text-align: center;
+        }
+
+        .btn-secondary {
+            width: 100%; max-width: 350px; padding: 18px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white; border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px; text-decoration: none; font-weight: 700;
+            text-transform: uppercase; transition: 0.3s; text-align: center;
+        }
+
+        .btn-home:hover, .btn-secondary:hover { transform: scale(1.03); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.2); }
+    </style>
+</head>
+<body>
+
+<div class="success-card">
+    <div class="icon-check">✓</div>
+    <h1>Flight Successfully Created</h1>
+
+    <div class="summary-grid">
+        <div class="summary-item"><label>Flight Number</label><span>#{{ summary.id }}</span></div>
+        <div class="summary-item"><label>Route</label><span>{{ summary.origin }} ✈ {{ summary.destination }}</span></div>
+        <div class="summary-item"><label>Departure</label><span>{{ summary.time }}</span></div>
+        <div class="summary-item"><label>Aircraft ID</label><span>{{ summary.plane }}</span></div>
+
+        <div class="summary-item full-width">
+            <label>Pilots Assigned</label>
+            <span>{{ summary.pilots }}</span>
+        </div>
+
+        <div class="summary-item full-width">
+            <label>Attendants Assigned</label>
+            <span>{{ summary.attendants }}</span>
+        </div>
+
+        <div class="summary-item"><label>Crew Count</label><span>{{ summary.crew_count }} Members</span></div>
+        <div class="summary-item"><label>Status</label><span style="color: #2ecc71; font-weight: 900;">ACTIVE</span></div>
+    </div>
+
+    <div class="button-group">
+        <a href="{{ url_for('add_flight_step1') }}" class="btn-home">Create Another Flight</a>
+        <a href="{{ url_for('managers_home_page') }}" class="btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+</body>
+</html>

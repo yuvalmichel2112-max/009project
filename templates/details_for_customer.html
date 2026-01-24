@@ -171,7 +171,7 @@
         <div class="input-group full-width">
             <label>Passport Number</label>
             <input type="text" name="passport"
-                   value="{{ customer.Passport_number if customer else '' }}" required>
+                   value="{{ customer.Passport_number if customer else '' }}"minlength="8" maxlength="8" required class="mt-2" style="width: 100%; box-sizing: border-box;">
         </div>
 
         <div class="input-group full-width">

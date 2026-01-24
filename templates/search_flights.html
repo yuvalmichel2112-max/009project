@@ -190,6 +190,25 @@
     </style>
 </head>
 <body>
+<div style="position: absolute; top: 20px; left: 20px; z-index: 1000;">
+    <a href="{{ url_for('booking_management') if session.get('customer_email') else url_for('identify_guest') }}"
+       style="background-color: #FF6B00;
+              color: white;
+              border: 2px solid #2E0249;
+              padding: 10px 20px;
+              text-decoration: none;
+              border-radius: 30px;
+              font-weight: 800;
+              font-family: 'Montserrat', sans-serif;
+              box-shadow: 0 4px 15px rgba(46, 2, 73, 0.3);
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              transition: 0.3s;
+              font-size: 0.9rem;">
+        <span style="font-size: 1.2rem;">✈</span> Manage Your Bookings
+    </a>
+</div>
 <div style="position: absolute; top: 20px; right: 20px; z-index: 1000;">
     {% if session.get('managers_ID') %}
         <a href="{{ url_for('logout') }}"
@@ -225,9 +244,9 @@
 </div>
 <div style="position: absolute; top: 20px; left: 20px; z-index: 1000;">
     <a href="{{ url_for('booking_management') }}"
-       style="background-color: #FF6B00; /* כתום מותג */
+       style="background-color: #FF6B00;
               color: white;
-              border: 2px solid #2E0249; /* סגול מותג */
+              border: 2px solid #2E0249;
               padding: 10px 20px;
               text-decoration: none;
               border-radius: 30px;
@@ -239,14 +258,14 @@
               gap: 8px;
               transition: 0.3s;
               font-size: 0.9rem;">
-        <span style="font-size: 1.2rem;">✈</span> Manage Your Flight
+        <span style="font-size: 1.2rem;">✈</span> Manage Your Bookings
     </a>
 </div>
 <style>
     div a:hover {
         transform: scale(1.05);
-        background-color: #2E0249 !important; /* הופך לסגול בריחוף */
-        border-color: #FF6B00 !important;   /* מסגרת כתומה בריחוף */
+        background-color: #2E0249 !important;
+        border-color: #FF6B00 !important;
     }
 </style>
 <div id="dynamic-bg-image"></div>

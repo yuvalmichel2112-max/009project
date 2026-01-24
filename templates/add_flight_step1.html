@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FlyTAU | Add New Flight - Step 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    <style>
+        /* הגדרות ה-Root וה-Background המונפש */
+        :root {
+            --mgr-pink: #FF007F;
+            --mgr-red: #D2042D;
+            --dark-bg: #1a091d;
+            --glass: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(-45deg, var(--dark-bg), #2E0249, var(--mgr-red), var(--mgr-pink));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--glass);
+            padding: 50px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(25px);
+            box-shadow: 0 30px 70px rgba(0,0,0,0.4);
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 2.5rem;
+            text-align: center;
+            background: linear-gradient(to right, #fff, var(--mgr-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        .mgmt-section { margin-bottom: 35px; }
+        .mgmt-section h3 {
+            color: var(--mgr-pink);
+            border-bottom: 1px solid rgba(255,0,127,0.3);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-left: 5px;
+        }
+
+        select, input {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            color: white;
+            outline: none;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        select:focus, input:focus {
+            border-color: var(--mgr-pink);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        select option {
+            background: #2E0249;
+            color: white;
+        }
+
+        .price-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(45deg, var(--mgr-red), var(--mgr-pink));
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 1.2rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(210,4,45,0.3);
+            transition: 0.3s transform;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(210,4,45,0.4);
+        }
+
+        .alert-msg {
+            font-size: 0.85rem;
+            color: #FFD700;
+            font-weight: 700;
+            padding: 12px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <h1>Add New Flight</h1>
+
+    <form method="POST" action="/add_flight" id="flightForm">
+        <div class="mgmt-section">
+            <h3>Flight Information</h3>
+            <div class="form-group">
+                <label>Origin Airport:</label>
+                <select name="origin" id="origin" required onchange="applyPokaYoke()">
+                    <option value="" disabled selected>Select Origin</option>
+                    {% for row in airports %}
+                        <option value="{{ row['Code'] }}">{{ row['City'] }} ({{ row['Code'] }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Destination Airport:</label>
+                <select name="destination" id="destination" required onchange="applyPokaYoke()">
+                    <option value="" disabled selected>Select Destination</option>
+                    {% for row in airports %}
+                        <option value="{{ row['Code'] }}">{{ row['City'] }} ({{ row['Code'] }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Departure Time:</label>
+                <input type="datetime-local" id="depTime" name="departureTime" required>
+            </div>
+        </div>
+
+        <div class="mgmt-section">
+            <h3>Aircraft & Pricing</h3>
+            <div class="form-group">
+                <label>Aircraft Size:</label>
+                <select name="aircraftSize" id="aircraftSize" onchange="togglePrices()" required>
+                    <option value="large">Large Aircraft (Economy + Business)</option>
+                    <option value="small" id="smallOption">Small Aircraft (Economy Only)</option>
+                </select>
+            </div>
+
+            <p id="lockAlert" class="alert-msg hidden"></p>
+
+            <div class="price-grid">
+                <div class="form-group">
+                    <label>Economy Price ($):</label>
+                    <input type="number" name="economyPrice" required min="1" placeholder="e.g. 450">
+                </div>
+                <div id="bizContainer" class="form-group">
+                    <label>Business Price ($):</label>
+                    <input type="number" name="businessPrice" id="bizPrice" min="1" placeholder="e.g. 1200">
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Continue to Step 2</button>
+    </form>
+</div>
+
+<script>
+    const routesData = {{ routes_json | safe }};
+
+    function applyPokaYoke() {
+        const o = document.getElementById('origin').value;
+        const d = document.getElementById('destination').value;
+        const sizeSel = document.getElementById('aircraftSize');
+        const smallOpt = document.getElementById('smallOption');
+        const alertMsg = document.getElementById('lockAlert');
+
+        smallOpt.disabled = false;
+        alertMsg.classList.add('hidden');
+
+        if (o && d) {
+            if (o === d) {
+                alert("Origin and Destination cannot be the same!");
+                document.getElementById('destination').value = "";
+                return;
+            }
+
+            // חיפוש מסלול דו-כיווני (תל אביב-ניו יורק = ניו יורק-תל אביב)
+            const found = routesData.find(r =>
+                (r.origin === o && r.dest === d) || (r.origin === d && r.dest === o)
+            );
+
+            if (found && found.duration > 6) {
+                sizeSel.value = "large";
+                smallOpt.disabled = true;
+                alertMsg.innerText = `⚠ Long-haul flight (${found.duration}h): Small aircraft is disabled for this route.`;
+                alertMsg.classList.remove('hidden');
+            } else if (!found && o && d) {
+                alertMsg.innerText = "⚠ Warning: Duration unknown for this route. Proceed with caution.";
+                alertMsg.classList.remove('hidden');
+            }
+        }
+        togglePrices();
+    }
+
+    function togglePrices() {
+        const size = document.getElementById('aircraftSize').value;
+        const bizContainer = document.getElementById('bizContainer');
+        const bizInp = document.getElementById('bizPrice');
+
+        if (size === 'large') {
+            bizContainer.classList.remove('hidden');
+            bizInp.required = true;
+        } else {
+            bizContainer.classList.add('hidden');
+            bizInp.required = false;
+            bizInp.value = "";
+        }
+    }
+
+    window.onload = function() {
+        const dt = document.getElementById('depTime');
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setMinutes(tomorrow.getMinutes() - tomorrow.getTimezoneOffset());
+        dt.min = tomorrow.toISOString().slice(0, 16);
+        applyPokaYoke();
+    };
+
+    document.getElementById('flightForm').onsubmit = function() {
+        document.getElementById('aircraftSize').disabled = false;
+        document.getElementById('smallOption').disabled = false;
+    };
+</script>
+</body>
+</html>

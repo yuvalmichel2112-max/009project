@@ -2,25 +2,191 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>FlyTAU | Revenue Analytics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f9; }
-        .container { background: white; width: 80%; margin: 50px auto; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; }
-        p { color: #666; font-size: 1.1em; }
-        img { max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; }
-        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-top: 20px; }
+        :root {
+            --money-green: #059669; /* צבע הנושא לדו"ח הכנסות */
+            --deep-navy: #0f172a;
+            --pearl-white: rgba(255, 255, 255, 0.7);
+            --slate-gray: #64748b;
+        }
+
+        /* שמירה על עמוד אחד ללא גלילה - בדיוק כמו בדו"ח 1 */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); /* גרדיאנט ירקרק עדין */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .compact-container {
+            background: var(--pearl-white);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            width: 90%;
+            max-width: 1000px;
+            height: 80vh;
+            border-radius: 40px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 50px rgba(5, 150, 105, 0.1);
+        }
+
+        header {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--deep-navy);
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: var(--money-green);
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-top: 5px;
+        }
+
+        /* מבנה רוחבי - זהה לדו"ח 1 */
+        .main-layout {
+            display: flex;
+            flex: 1;
+            gap: 40px;
+            align-items: center;
+            min-height: 0;
+        }
+
+        /* פאנל נתונים - שמאל */
+        .data-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border-left: 8px solid var(--money-green); /* קו צבע אחיד לפי הנושא */
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--slate-gray);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .stat-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--deep-navy);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            color: var(--slate-gray);
+            line-height: 1.6;
+        }
+
+        /* פאנל גרף - ימין */
+        .chart-panel {
+            flex: 1.5;
+            height: 100%;
+            background: white;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        footer {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .nav-btn {
+            background: var(--deep-navy);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+
+        .nav-btn:hover {
+            background: var(--money-green);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(5, 150, 105, 0.3);
+        }
     </style>
 </head>
 <body>
-<div class="container">
-        <h1>Revenue Analysis by Airplane Type</h1>
-        <p>Breakdown of revenue by manufacturer, size, and seat class.</p>
 
-        <img src="{{ url_for('static', filename=graph_image) }}" alt="Revenue Graph Stacked Bar">
+    <div class="compact-container">
+        <header>
+            <h1>Revenue Analysis</h1>
+            <div class="subtitle">FINANCIAL PERFORMANCE BY FLEET</div>
+        </header>
 
-        <br>
-        <button onclick="window.history.back()">Back to Dashboard</button>
+        <div class="main-layout">
+            <div class="data-panel">
+                <div class="stat-card">
+                    <span class="stat-label">Analysis Context</span>
+                    <h2 class="stat-title">Yield by Airplane Type</h2>
+                </div>
+
+                <p class="description">
+                    Detailed breakdown of revenue generated by manufacturer and class.
+                    This view identifies profit centers across <strong>Economy</strong> and <strong>Business</strong> departments.
+                    Essential for optimizing the <strong>FlyTAU</strong> pricing strategy.
+                </p>
+            </div>
+
+            <div class="chart-panel">
+                <img src="{{ url_for('static', filename=graph_image) }}" alt="Revenue Chart">
+            </div>
+        </div>
+
+        <footer>
+            <button class="nav-btn" onclick="window.history.back()">Back to Dashboard</button>
+        </footer>
     </div>
+
 </body>
 </html>

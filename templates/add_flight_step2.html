@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FlyTAU | Step 2 - Resources</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    <style>
+        :root { --mgr-pink: #FF007F; --mgr-red: #D2042D; --dark-bg: #1a091d; --glass: rgba(255,255,255,0.08); }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: linear-gradient(-45deg, var(--dark-bg), #2E0249, var(--mgr-red), var(--mgr-pink)); background-size: 400% 400%; animation: gradientBG 15s ease infinite; color: #fff; display: flex; justify-content: center; padding: 40px; min-height: 100vh; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .dashboard-container { width: 100%; max-width: 900px; background: var(--glass); padding: 50px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(25px); box-shadow: 0 30px 70px rgba(0,0,0,0.4); }
+        h1 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 2.5rem; text-align: center; background: linear-gradient(to right, #fff, var(--mgr-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; margin-bottom: 40px; }
+
+        .req-info { text-align: center; color: #FFD700; font-weight: bold; margin-bottom: 30px; padding: 15px; background: rgba(255, 215, 0, 0.1); border-radius: 15px; border: 1px solid rgba(255, 215, 0, 0.2); }
+        .mgmt-section { margin-bottom: 35px; }
+        .mgmt-section h3 { color: var(--mgr-pink); border-bottom: 1px solid rgba(255,0,127,0.3); padding-bottom: 10px; margin-bottom: 20px; text-transform: uppercase; }
+
+        .resource-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
+        .resource-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.3s; }
+        .resource-item:hover { background: rgba(255,255,255,0.1); border-color: var(--mgr-pink); }
+        .resource-item:has(input:checked) { border-color: var(--mgr-pink); background: rgba(255, 0, 127, 0.1); }
+
+        .btn-submit { width: 100%; padding: 20px; background: linear-gradient(45deg, var(--mgr-red), var(--mgr-pink)); color: white; border: none; border-radius: 20px; font-weight: 900; font-size: 1.2rem; cursor: pointer; text-transform: uppercase; box-shadow: 0 10px 20px rgba(210,4,45,0.3); }
+        .no-res { color: #ff4d4d; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <h1>Assign Resources</h1>
+    <p class="req-info">
+        Requirement for {{ flight_data.size }} plane: {{ req.pilots }} Pilots & {{ req.attendants }} Attendants<br>
+        (Only staff currently at {{ flight_data.origin }} are shown)
+    </p>
+
+    <form id="resourceForm" method="POST" action="/add_flight_step2">
+        <div class="mgmt-section">
+            <h3>1. Select Aircraft</h3>
+            <div class="resource-grid">
+                {% for plane in available %}
+                <label class="resource-item">
+                    <input type="radio" name="plane_id" value="{{ plane.ID }}" required>
+                    <span>#{{ plane.ID }} - {{ plane.Manufactorer }}</span>
+                </label>
+                {% else %}
+                <p class="no-res">No available {{ flight_data.size }} aircraft at {{ flight_data.origin }}.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mgmt-section">
+            <h3>2. Select Pilots (Exactly {{ req.pilots }})</h3>
+            <div class="resource-grid">
+                {% for p in pilots %}
+                <label class="resource-item">
+                    <input type="checkbox" name="pilot_ids" value="{{ p.ID }}" class="p-check">
+                    <span>{{ p.First_name }} {{ p.Last_name }} (ID: {{ p.ID }})</span>
+                </label>
+                {% else %}
+                <p class="no-res">No pilots found at {{ flight_data.origin }}.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mgmt-section">
+            <h3>3. Select Attendants (Exactly {{ req.attendants }})</h3>
+            <div class="resource-grid">
+                {% for a in attendants %}
+                <label class="resource-item">
+                    <input type="checkbox" name="attendant_ids" value="{{ a.ID }}" class="a-check">
+                    <span>{{ a.First_name }} {{ a.Last_name }} (ID: {{ a.ID }})</span>
+                </label>
+                {% else %}
+                <p class="no-res">No attendants found at {{ flight_data.origin }}.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Finalize Flight Creation</button>
+    </form>
+</div>
+
+<script>
+    const reqP = {{ req.pilots }};
+    const reqA = {{ req.attendants }};
+
+    document.getElementById('resourceForm').onsubmit = function(e) {
+        const pCount = document.querySelectorAll('.p-check:checked').length;
+        const aCount = document.querySelectorAll('.a-check:checked').length;
+
+        if (pCount !== reqP || aCount !== reqA) {
+            alert(`Poka-Yoke Violation: You must select EXACTLY ${reqP} pilots and ${reqA} attendants!`);
+            e.preventDefault();
+            return false;
+        }
+    };
+</script>
+</body>
+</html>

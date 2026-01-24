@@ -4,199 +4,233 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlyTAU | Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --eggplant: #2E0249;
-            --plum: #570A57;
-            --orange: #FF8C00;
+            --flytau-pink: #FF007F;
+            --flytau-purple: #2E0249;
+            --flytau-orange: #FF6B00;
+            --accent-gold: #ffba08;
         }
 
-        body {
+        body, html {
             margin: 0;
             padding: 0;
             height: 100vh;
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--eggplant) 0%, var(--plum) 50%, var(--orange) 160%);
+            width: 100vw;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--flytau-pink), var(--flytau-purple) 50%, var(--flytau-orange));
+            background-size: 200% 200%;
+            animation: gradientBG 15s ease infinite;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
-            overflow: hidden;
-            position: relative;
         }
 
-        body::before {
-            content: "";
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+
+        .manager-access-btn {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("{{ url_for('static', filename='images/FlyTAU-logo.png') }}");
-            background-size: 180px;
-            background-repeat: repeat;
-            opacity: 0.02;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .static-airplane {
-            position: absolute;
-            width: 750px;
-            z-index: 1;
-            top: 10%;
-            left: -15%;
-            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.6));
-            opacity: 0.85;
-            animation: drift 40s ease-in-out infinite;
-        }
-
-        @keyframes drift {
-            0%, 100% { transform: translate(0, 0) rotate(2deg); }
-            50% { transform: translate(40px, -20px) rotate(-1deg); }
-        }
-
-        .login-card {
-            position: relative;
-            z-index: 2;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border: none;
-            padding: 70px 50px;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            padding: 8px 16px;
+            border: 2px solid var(--accent-gold);
             border-radius: 30px;
+            background: rgba(46, 2, 73, 0.6);
+            backdrop-filter: blur(10px);
+        }
+
+        .main-card {
+            display: flex;
+            width: 85vw;
+            height: 75vh;
+            background: rgba(46, 2, 73, 0.8);
+            backdrop-filter: blur(25px);
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+        }
+
+
+        .branding-side {
+            flex: 1.1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.2);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
             text-align: center;
-            width: 100%;
-            max-width: 380px;
-            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.5);
         }
 
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.2rem;
-            margin: 0;
-            letter-spacing: 6px;
+       .company-logo {
+            width: 200px;
+            height: auto;
+            margin-bottom: 25px;
+
+            /* אנימציית הציפה */
+            animation: floatLogo 4s ease-in-out infinite;
+
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        @keyframes floatLogo {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .company-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .brand-title {
+            font-size: 3.5rem;
             font-weight: 900;
-            color: white;
+            color: #fff;
+            margin: 0;
+            line-height: 1;
         }
 
-        h1 span { color: var(--orange); }
+        .iem-text {
+            color: var(--accent-gold);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        /* צד ימין: טופס כניסה וקישורים */
+        .form-side {
+            flex: 1;
+            padding: 30px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
         h2 {
-            font-weight: 200;
-            font-size: 0.85rem;
-            margin-bottom: 50px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            opacity: 0.6;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 30px;
         }
 
-        .input-group { margin-bottom: 15px; }
+        .input-group { margin-bottom: 25px; }
 
-        input[type="email"], input[type="password"] {
-            width: 100%;
-            padding: 18px 25px;
-            background: rgba(255, 255, 255, 0.98);
-            border: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-family: 'Inter', sans-serif;
-            color: var(--eggplant);
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        input:focus {
-            box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
-        }
-
-        input[type="submit"] {
-            width: 100%;
-            padding: 18px;
-            background: var(--orange);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        input[type="submit"]:hover {
-            background: #ff9d26;
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(255, 140, 0, 0.3);
-        }
-
-        .footer-links {
-            margin-top: 40px;
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-        }
-
-        .footer-links a {
-            color: white;
-            text-decoration: none;
+        label {
+            display: block;
             font-size: 0.8rem;
-            opacity: 0.5;
-            transition: 0.3s;
-            letter-spacing: 1px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+            text-transform: uppercase;
         }
 
-        .footer-links a:hover { opacity: 1; color: var(--orange); }
-
-        .admin-btn {
-            position: absolute;
-            top: 40px;
-            left: 40px;
-            padding: 10px 20px;
+        input {
+            width: 100%;
+            padding: 15px 20px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            color: white;
+            border-radius: 12px;
+            color: #fff;
+            outline: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 18px;
+            margin-top: 10px;
+            background: linear-gradient(to right, var(--flytau-orange), var(--accent-gold));
+            border: none;
+            border-radius: 15px;
+            color: var(--flytau-purple);
+            font-size: 1.2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.3);
+        }
+
+        /* הקישורים שביקשת: רישום וכניסת אורח */
+        .auth-links {
+            margin-top: 35px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 25px;
+        }
+
+        .auth-links a {
+            color: #fff;
             text-decoration: none;
-            font-size: 0.7rem;
-            font-weight: 400;
-            letter-spacing: 2px;
-            z-index: 3;
+            font-size: 0.9rem;
+            font-weight: 700;
+            opacity: 0.8;
             transition: 0.3s;
         }
-        .admin-btn:hover { background: rgba(255, 255, 255, 0.1); }
-
+        .auth-links a:hover { opacity: 1; color: var(--accent-gold); }
     </style>
 </head>
 <body>
-    <img src="{{ url_for('static', filename='images/airplane.png') }}" class="static-airplane" alt="">
 
-    <a href="/managers_log_in" class="admin-btn">MANAGER ACCESS</a>
+    <a href="/managers_log_in" class="manager-access-btn">MANAGER ACCESS</a>
 
-    <div class="login-card">
-        <h1>Fly<span>TAU</span></h1>
-        <h2>Order Your Dream Trip</h2>
+    <div class="main-card">
+        <div class="branding-side">
+            <img src="{{ url_for('static', filename='images/FlyTAU-logo-gradient.png') }}" alt="FlyTAU Logo" class="company-logo">
+            <h1 class="brand-title">FlyTAU</h1>
+            <p style="color: rgba(255,255,255,0.4); font-size: 0.7rem; margin-top: 20px;">
+                Make Your Dreams Come True
+            </p>
+        </div>
 
-        <form action="/" method="POST">
-            {% if error %}<div style="color: #ff4d4d; margin-bottom: 20px; font-size: 0.8rem;">{{ error }}</div>{% endif %}
+        <div class="form-side">
+            <h2>Welcome Back.</h2>
+            <form action="/" method="POST">
+                {% if error %}
+                    <p style="color: #ff4d4d; font-size: 0.85rem; font-weight: 800; margin-bottom: 15px;">{{ error }}</p>
+                {% endif %}
 
-            <div class="input-group">
-                <input type="email" name="registered_email" placeholder="Email" required>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" name="registered_email" placeholder="Enter Your Email" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="registered_password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="login-btn">Log In</button>
+            </form>
+
+            <div class="auth-links">
+                <a href="/sign_up">sign in</a>
+                <span style="color: rgba(255,255,255,0.2)">|</span>
+                <a href="/search_flights">continue as guest</a>
             </div>
-
-            <div class="input-group">
-                <input type="password" name="registered_password" placeholder="Password" required>
-            </div>
-
-            <input type="submit" value="Log In">
-
-            <div class="footer-links">
-                <a href="/sign_up">Register</a>
-                <a href="/search_flights">Guest access</a>
-            </div>
-        </form>
+        </div>
     </div>
 
 </body>

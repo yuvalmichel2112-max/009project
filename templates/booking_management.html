@@ -5,91 +5,195 @@
     <title>FlyTAU | Manage Bookings</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --brand-orange: #FF6B00; --brand-purple: #2E0249; }
-        body { font-family: 'Montserrat', sans-serif; background: #1a091d; color: white; padding: 40px; }
-
-        .header-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        h1 { color: var(--brand-orange); font-weight: 800; }
-
-        .history-btn {
-            text-decoration: none; color: white; border: 2px solid var(--brand-orange);
-            padding: 10px 20px; border-radius: 30px; font-weight: 600; transition: 0.3s;
+        :root {
+            --deep-plum: #2E0249;
+            --mid-plum: #6a1b9a;
+            --vibrant-orange: #FF6B00;
+            --dark-purple: #1a091d;
+            --accent-orange: #FF8C00;
         }
-        .history-btn:hover { background: var(--brand-orange); }
 
-        table { width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.05); border-radius: 15px; overflow: hidden; }
-        th { background: var(--brand-purple); color: var(--brand-orange); padding: 15px; text-transform: uppercase; font-size: 0.8rem; }
-        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(-45deg, var(--deep-plum), var(--mid-plum), var(--vibrant-orange), var(--dark-purple));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
 
-        .cancel-btn { background: #FF007F; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-        /* Modal (Popup) Style */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
-        .modal-content { background: var(--brand-purple); margin: 15% auto; padding: 30px; border: 2px solid var(--brand-orange); width: 350px; border-radius: 20px; text-align: center; }
-        .modal-btns { display: flex; justify-content: space-around; margin-top: 25px; }
-        .btn-confirm { background: var(--brand-orange); color: white; padding: 10px 25px; text-decoration: none; border-radius: 10px; font-weight: bold; }
-        .btn-close { background: #555; color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; }
+        .management-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 1100px;
+            min-height: 500px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #fff, var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 0;
+            text-transform: uppercase;
+        }
+
+        .header-links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            width: 100%;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: white;
+            border: 1px dashed rgba(255, 255, 255, 0.5);
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent-orange);
+            color: var(--accent-orange);
+            transform: translateY(-2px);
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background: rgba(46, 2, 73, 0.6); color: var(--accent-orange); padding: 15px; text-transform: uppercase; font-size: 0.8rem; text-align: center; }
+        td { padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); text-align: center; }
+
+        .cancel-btn {
+            background: linear-gradient(45deg, #FF007F, #D2042D);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: 0.3s;
+        }
+        .cancel-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(210, 4, 45, 0.4); }
+
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); }
+        .modal-content { background: var(--dark-purple); margin: 15% auto; padding: 40px; border: 2px solid var(--accent-orange); width: 400px; border-radius: 35px; text-align: center; box-shadow: 0 0 30px rgba(255, 140, 0, 0.2); }
+        .modal-btns { display: flex; justify-content: center; gap: 20px; margin-top: 30px; }
+        .btn-confirm { background: linear-gradient(45deg, var(--accent-orange), #FF6B00); color: white; padding: 15px 25px; border: none; border-radius: 15px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .btn-close { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 15px 25px; border-radius: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="header-area">
-        <h1>Upcoming Journeys</h1>
-        <a href="/booking_history" class="history-btn">View Your Booking History</a>
+    <div class="management-card">
+        <h2>My Upcoming Trips</h2>
+
+        {% if error %}
+            <div style="background: rgba(255,0,0,0.2); border: 1px solid #ff4d4d; color: #fff; padding: 15px; border-radius: 12px; margin-bottom: 25px; text-align: center; font-weight: 700;">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <div class="header-links">
+    {% if session.get('customer_email') %}
+        <a href="/booking_history" class="nav-btn">View History</a>
+    {% else %}
+        <div style="width: 100px;"></div>
+    {% endif %}
+
+    <div style="font-size: 0.9rem; opacity: 0.8;">
+        Account: <span style="color: var(--accent-orange); font-weight: 700;">
+            {{ session.get('customer_email') or session.get('temp_guest_email') }}
+        </span>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Booking ID</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Order Date</th>
-                <th>Departure</th>
-                <th>Landing</th>
-                <th>Tickets</th>
-                <th>Total Price</th>
-                <th>Cancel</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for b in bookings %}
-            <tr>
-                <td>#{{ b.booking_id }}</td>
-                <td>{{ b.origin_city }}</td>
-                <td>{{ b.destination_city }}</td>
-                <td>{{ b.Booking_date.strftime('%d/%m/%Y') }}</td>
-                <td>{{ b.dep_time.strftime('%d/%m/%Y %H:%M') }}</td>
-                <td>{{ b.landing_time.strftime('%d/%m/%Y %H:%M') }}</td>
-                <td>{{ b.num_tickets }}</td>
-                <td style="color: var(--brand-orange); font-weight: bold;">${{ b.total_price }}</td>
-                <td>
-                    <button class="cancel-btn" onclick="openModal('{{ b.booking_id }}')">Cancel</button>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <a href="{{ url_for('search_flights') }}" class="nav-btn">Back to Search</a>
+</div>
 
-    <div id="cancelModal" class="modal">
-        <div class="modal-content">
-            <h2 style="color: white;">Are you sure?</h2>
-            <p>Do you really want to cancel booking #<span id="displayID"></span>?</p>
-            <div class="modal-btns">
-                <a id="yesBtn" href="#" class="btn-confirm">YES</a>
-                <button class="btn-close" onclick="closeModal()">NO</button>
+        {% if bookings %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Departure</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in bookings %}
+                    <tr>
+                        <td style="font-weight: 800;">#{{ b.booking_id }}</td>
+                        <td>{{ b.origin_city }}</td>
+                        <td>{{ b.destination_city }}</td>
+                        <td>{{ b.dep_time.strftime('%d/%m %H:%M') }}</td>
+                        <td style="color: var(--accent-orange); font-weight: 700;">${{ b.total_price }}</td>
+                        <td>
+                            <a href="/cancel_order/{{ b.booking_id }}" class="cancel-btn">CANCEL</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 60px;">
+                <p style="font-size: 1.5rem; margin-bottom: 30px;">No active flights found.</p>
+                <a href="/search_flights" class="nav-btn" style="padding: 15px 30px; font-size: 1rem;">Book Now</a>
             </div>
+        {% endif %}
+    </div>
+
+    <div id="bookingModal" class="modal" {% if show_modal %}style="display:block;"{% endif %}>
+        <div class="modal-content">
+            <h3 style="color: var(--accent-orange); font-size: 1.8rem; margin-top: 0;">⚠️ ARE YOU SURE?</h3>
+            <p>Cancel booking #{{ booking_id_to_cancel }}?</p>
+            <p style="font-size: 0.85rem; color: #ff4d4d; font-weight: 700; margin: 20px 0;">
+                ATTENTION: A 5% cancellation fee will be charged.
+            </p>
+
+            <form action="/perform_final_cancel" method="POST" class="modal-btns">
+                <input type="hidden" name="booking_id" value="{{ booking_id_to_cancel }}">
+                <button type="submit" class="btn-confirm">YES, CANCEL</button>
+                <button type="button" class="btn-close" onclick="closeModal()">NO, GO BACK</button>
+            </form>
         </div>
     </div>
 
     <script>
-        function openModal(id) {
-            document.getElementById('displayID').innerText = id;
-            document.getElementById('yesBtn').href = "/cancel_order/" + id;
-            document.getElementById('cancelModal').style.display = "block";
-        }
         function closeModal() {
-            document.getElementById('cancelModal').style.display = "none";
+            document.getElementById('bookingModal').style.display = "none";
+            window.location.href = "/booking_management";
         }
     </script>
 </body>

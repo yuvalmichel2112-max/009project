@@ -2,58 +2,222 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>FlyTAU | Operational Analytics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f9; }
-        .container { background: white; width: 80%; margin: 50px auto; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1 { color: #c0392b; }
-        p { color: #666; font-size: 1.1em; margin-bottom: 20px; }
-        img { max-width: 100%; height: auto; border: 1px solid #ddd; }
-        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-top: 20px; }
+        :root {
+            --lilac-purple: #8b5cf6; /* צבע הנושא לדו"ח ביטולים */
+            --lemon-yellow: #fde047;
+            --deep-purple: #2e1065;
+            --pearl-white: rgba(255, 255, 255, 0.75);
+            --slate-gray: #64748b;
+        }
+
+        /* מניעת גלילה ושמירה על עמוד אחד - קו אחיד עם שאר הדוחות */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            /* גרדיאנט עדין בסגול לילך וצהוב לימון */
+            background: linear-gradient(135deg, #f5f3ff 0%, #fefce8 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* כפתור Logout במיקום קבוע */
+        .logout-wrapper {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .logout-btn {
+            background-color: #FF007F;
+            color: white;
+            border: 2px solid #D2042D;
+            padding: 8px 18px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            box-shadow: 0 4px 15px rgba(210, 4, 45, 0.3);
+            transition: 0.3s;
+        }
+
+        .compact-container {
+            background: var(--pearl-white);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            width: 90%;
+            max-width: 1000px;
+            height: 80vh;
+            border-radius: 40px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 50px rgba(139, 92, 246, 0.1);
+            position: relative;
+        }
+
+        header {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--deep-purple);
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: var(--lilac-purple);
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-top: 5px;
+        }
+
+        /* מבנה רוחבי אחיד */
+        .main-layout {
+            display: flex;
+            flex: 1;
+            gap: 40px;
+            align-items: center;
+            min-height: 0;
+        }
+
+        /* פאנל נתונים - שמאל */
+        .data-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border-left: 8px solid var(--lilac-purple);
+            border-bottom: 3px solid var(--lemon-yellow);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--slate-gray);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .stat-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--deep-purple);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            color: var(--slate-gray);
+            line-height: 1.6;
+        }
+
+        /* פאנל גרף - ימין */
+        .chart-panel {
+            flex: 1.5;
+            height: 100%;
+            background: white;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        footer {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .nav-btn {
+            background: var(--deep-purple);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+
+        .nav-btn:hover {
+            background: var(--lilac-purple);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+        }
     </style>
 </head>
 <body>
-<div style="position: absolute; top: 20px; right: 20px; z-index: 1000;">
-    {% if session.get('managers_ID') %}
-        <a href="{{ url_for('logout') }}"
-           style="background-color: #FF007F;
-                  color: white;
-                  border: 2px solid #D2042D;
-                  padding: 8px 18px;
-                  text-decoration: none;
-                  border-radius: 25px;
-                  font-weight: 800;
-                  font-family: 'Montserrat', sans-serif;
-                  box-shadow: 0 4px 15px rgba(210, 4, 45, 0.3);
-                  transition: 0.3s;
-                  font-size: 0.75rem;">
-           Logout
-        </a>
-    {% elif session.get('customer_email') %}
-        <a href="{{ url_for('logout') }}"
-           style="background-color: #FF6B00;
-                  color: white;
-                  border: 2px solid #2E0249;
-                  padding: 8px 18px;
-                  text-decoration: none;
-                  border-radius: 25px;
-                  font-weight: 800;
-                  font-family: 'Montserrat', sans-serif;
-                  box-shadow: 0 4px 15px rgba(46, 2, 73, 0.3);
-                  transition: 0.3s;
-                  font-size: 0.75rem;">
-           Logout
-        </a>
-    {% endif %}
-</div>
-<div class="container">
-        <h1>Monthly Cancellation Rate Analysis</h1>
-        <p>Tracking the percentage of cancelled bookings over time.</p>
 
-        <img src="{{ url_for('static', filename=graph_image) }}" alt="Cancellation Rate Line Chart">
-
-        <br>
-        <button onclick="window.history.back()">Back to Dashboard</button>
+    <div class="logout-wrapper">
+        {% if session.get('managers_ID') or session.get('customer_email') %}
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        {% endif %}
     </div>
+
+    <div class="compact-container">
+        <header>
+            <h1>Cancellation Rates</h1>
+            <div class="subtitle">OPERATIONAL STABILITY & TRENDS</div>
+        </header>
+
+        <div class="main-layout">
+            <div class="data-panel">
+                <div class="stat-card">
+                    <span class="stat-label">Performance Metrics</span>
+                    <h2 class="stat-title">Monthly Trend Analysis</h2>
+                </div>
+
+                <p class="description">
+                    Tracking the percentage of <strong>cancelled bookings</strong> over time.
+                    This metric is vital for assessing <strong>FlyTAU</strong> system reliability
+                    and understanding customer behavior during specific time periods.
+                </p>
+            </div>
+
+            <div class="chart-panel">
+                <img src="{{ url_for('static', filename=graph_image) }}" alt="Cancellation Trends">
+            </div>
+        </div>
+
+        <footer>
+            <button class="nav-btn" onclick="window.history.back()">Back to Dashboard</button>
+        </footer>
+    </div>
+
 </body>
 </html>
