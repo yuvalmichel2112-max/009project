@@ -149,7 +149,6 @@
         .fare-value { font-size: 2.4rem; font-weight: 800; color: var(--vibrant-orange); margin: 5px 0; }
         .ticket-id-tag { font-size: 0.7rem; font-weight: 700; color: var(--mid-plum); letter-spacing: 1px; }
 
-        /* Buttons Section */
         .actions {
             margin-top: 20px;
             display: flex;
@@ -159,7 +158,6 @@
         }
 
         .btn {
-            flex: 1;
             padding: 20px;
             border-radius: 15px;
             font-weight: 800;
@@ -173,10 +171,27 @@
             text-align: center;
         }
 
-        .btn-confirm { background: linear-gradient(45deg, var(--accent-orange), var(--vibrant-orange)); color: white; }
-        .btn-confirm:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(255, 107, 0, 0.5); }
-        .btn-cancel { background: rgba(255, 255, 255, 0.1); border: 2px solid var(--vibrant-orange); color: var(--white); }
-        .btn-cancel:hover { background: rgba(255, 107, 0, 0.2); color: var(--accent-orange); }
+        .btn-confirm {
+            flex: 2;
+            background: linear-gradient(45deg, var(--accent-orange), var(--vibrant-orange));
+            color: white;
+            box-shadow: 0 10px 25px rgba(255, 107, 0, 0.3);
+        }
+        .btn-confirm:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 107, 0, 0.5);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--vibrant-orange);
+            color: var(--white);
+        }
+        .btn-cancel:hover {
+            background: rgba(255, 107, 0, 0.2);
+            color: var(--accent-orange);
+        }
     </style>
 </head>
 <body>
@@ -233,8 +248,8 @@
     {% endfor %}
 
     <div class="actions">
-        <form action="/final_confirm" method="POST" style="flex: 1;">
-            <button type="submit" class="btn btn-confirm">Agree & Book</button>
+        <form action="/final_confirm" method="POST" style="flex: 2;">
+            <button type="submit" class="btn btn-confirm" style="width: 100%;">Agree & Book</button>
         </form>
         <a href="/search_flights" class="btn btn-cancel">Cancel Order</a>
     </div>

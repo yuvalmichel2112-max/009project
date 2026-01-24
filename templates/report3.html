@@ -2,25 +2,189 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>FlyTAU | Crew Analytics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f9; }
-        .container { background: white; width: 85%; margin: 50px auto; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; }
-        p { color: #666; margin-bottom: 30px; }
-        img { max-width: 100%; height: auto; border: 1px solid #ddd; }
-        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-top: 20px; }
+        :root {
+            --sky-blue: #0ea5e9;
+            --baby-pink: #f472b6;
+            --deep-navy: #0f172a;
+            --pearl-white: rgba(255, 255, 255, 0.7);
+            --slate-gray: #64748b;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #fdf2f8 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .compact-container {
+            background: var(--pearl-white);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            width: 90%;
+            max-width: 1000px;
+            height: 80vh;
+            border-radius: 40px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 50px rgba(14, 165, 233, 0.1);
+        }
+
+        header {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--deep-navy);
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: var(--sky-blue);
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-top: 5px;
+        }
+
+        .main-layout {
+            display: flex;
+            flex: 1;
+            gap: 40px;
+            align-items: center;
+            min-height: 0;
+        }
+
+        .data-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border-left: 8px solid var(--sky-blue);
+            border-right: 2px solid var(--baby-pink);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--slate-gray);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .stat-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--deep-navy);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            color: var(--slate-gray);
+            line-height: 1.6;
+        }
+
+        .chart-panel {
+            flex: 1.5;
+            height: 100%;
+            background: white;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        footer {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .nav-btn {
+            background: var(--deep-navy);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+
+        .nav-btn:hover {
+            background: var(--sky-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+        }
     </style>
 </head>
 <body>
-<div class="container">
-        <h1>Employee Flight Hours Breakdown</h1>
-        <p>Comparison of long-haul vs. short-haul flight hours per employee.</p>
 
-        <img src="{{ url_for('static', filename=graph_image) }}" alt="Employee Hours Graph">
+    <div class="compact-container">
+        <header>
+            <h1>Crew Flight Hours</h1>
+            <div class="subtitle">STAFF PERFORMANCE & TRAINING AUDIT</div>
+        </header>
 
-        <br>
-        <button onclick="window.history.back()">Back to Dashboard</button>
+        <div class="main-layout">
+            <div class="data-panel">
+                <div class="stat-card">
+                    <span class="stat-label">Employee Breakdown</span>
+                    <h2 class="stat-title">Long-haul vs. Short-haul</h2>
+                </div>
+
+                <p class="description">
+                    Comparison of flight hours across the <strong>FlyTAU</strong> staff.
+                    This analysis tracks long-distance training eligibility for <strong>Pilots</strong> and <strong>Flight Attendants</strong>.
+                    Ensuring operational compliance with safety standards.
+                </p>
+            </div>
+
+            <div class="chart-panel">
+                <img src="{{ url_for('static', filename=graph_image) }}" alt="Flight Hours Chart">
+            </div>
+        </div>
+
+        <footer>
+            <button class="nav-btn" onclick="window.history.back()">Back to Dashboard</button>
+        </footer>
     </div>
+
 </body>
 </html>

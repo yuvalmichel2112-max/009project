@@ -4,208 +4,217 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlyTAU | Available Flights</title>
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Orbitron:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --flytau-purple: #2E0249;
-            --flytau-plum: #5D3A76;
-            --flytau-orange: #FF8C00;
-            --glass-bg: rgba(255, 255, 255, 0.05);
+            --deep-plum: #2E0249;
+            --mid-plum: #6a1b9a;
+            --vibrant-orange: #FF6B00;
+            --dark-purple: #1a091d;
+            --accent-orange: #FF8C00;
         }
 
         body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(-45deg, var(--deep-plum), var(--mid-plum), var(--vibrant-orange), var(--dark-purple));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             margin: 0;
-            padding: 0;
-            font-family: 'Comfortaa', cursive;
-            background-color: var(--flytau-purple);
-            background-image:
-                radial-gradient(circle at center, rgba(93, 58, 118, 0.4) 0%, var(--flytau-purple) 100%),
-                url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-            color: white;
-            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
+            color: #fff;
             padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .main-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 50px;
+            border-radius: 35px;
             width: 100%;
-            max-width: 1200px;
-            padding: 60px;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+            max-width: 1150px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
             text-align: center;
         }
 
         h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
-            letter-spacing: 8px;
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 40px;
+            background: linear-gradient(to right, #fff, var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-transform: uppercase;
-            margin-bottom: 50px;
-            color: white;
+            letter-spacing: 2px;
         }
-
-        h1 span { color: var(--flytau-orange); }
 
         table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 15px;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
 
         th {
-            font-family: 'Orbitron', sans-serif;
+            background: rgba(46, 2, 73, 0.6);
+            color: var(--accent-orange);
+            padding: 18px;
             text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 3px;
-            color: var(--flytau-orange);
-            padding: 20px;
-            border-bottom: 2px solid rgba(255, 140, 0, 0.2);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 107, 0, 0.3);
         }
 
         td {
-            padding: 25px 20px;
-            background: rgba(255, 255, 255, 0.02);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            font-weight: 500;
         }
 
-        td:first-child { border-radius: 20px 0 0 20px; border-left: 1px solid rgba(255, 255, 255, 0.05); }
-        td:last-child { border-radius: 0 20px 20px 0; border-right: 1px solid rgba(255, 255, 255, 0.05); }
-
         .code {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 900;
-            color: white;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #fff;
         }
 
         .price-btn {
-            display: block;
+            display: inline-block;
             text-decoration: none;
-            padding: 15px;
-            border-radius: 15px;
-            border: 1px solid rgba(255, 140, 0, 0.2);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: var(--flytau-orange);
-            background: rgba(255, 140, 0, 0.03);
+            background: linear-gradient(45deg, var(--accent-orange), var(--vibrant-orange));
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 800;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.2);
         }
 
         .price-btn:hover {
-            background: var(--flytau-orange);
-            color: var(--flytau-purple);
-            transform: scale(1.1) translateY(-5px);
-            box-shadow: 0 10px 20px rgba(255, 140, 0, 0.4);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 107, 0, 0.4);
+            filter: brightness(1.1);
         }
 
         .price-val {
             display: block;
-            font-size: 1.3rem;
-            font-weight: 800;
+            font-size: 1.1rem;
         }
 
         .price-label {
             display: block;
             font-size: 0.6rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-            opacity: 0.8;
+            opacity: 0.9;
+            margin-bottom: 2px;
+        }
+
+        .logout-container {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            z-index: 1000;
+        }
+
+        .nav-logout {
+            text-decoration: none;
+            color: white;
+            border: 1px dashed rgba(255, 255, 255, 0.5);
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-logout:hover {
+            border-color: #FF007F;
+            color: #FF007F;
+            background: rgba(255, 0, 127, 0.1);
         }
 
         .no-flights {
-            font-family: 'Orbitron', sans-serif;
-            padding: 100px;
-            opacity: 0.4;
-            letter-spacing: 5px;
+            padding: 80px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            opacity: 0.6;
+            letter-spacing: 2px;
         }
     </style>
 </head>
 <body>
-<div style="position: absolute; top: 20px; right: 20px; z-index: 1000;">
-    {% if session.get('managers_ID') %}
-        <a href="{{ url_for('logout') }}"
-           style="background-color: #FF007F;
-                  color: white;
-                  border: 2px solid #D2042D;
-                  padding: 8px 18px;
-                  text-decoration: none;
-                  border-radius: 25px;
-                  font-weight: 800;
-                  font-family: 'Montserrat', sans-serif;
-                  box-shadow: 0 4px 15px rgba(210, 4, 45, 0.3);
-                  transition: 0.3s;
-                  font-size: 0.75rem;">
-           Logout
-        </a>
-    {% elif session.get('customer_email') %}
-        <a href="{{ url_for('logout') }}"
-           style="background-color: #FF6B00;
-                  color: white;
-                  border: 2px solid #2E0249;
-                  padding: 8px 18px;
-                  text-decoration: none;
-                  border-radius: 25px;
-                  font-weight: 800;
-                  font-family: 'Montserrat', sans-serif;
-                  box-shadow: 0 4px 15px rgba(46, 2, 73, 0.3);
-                  transition: 0.3s;
-                  font-size: 0.75rem;">
-           Logout
-        </a>
+
+<div class="logout-container">
+    {% if session.get('managers_ID') or session.get('customer_email') %}
+        <a href="{{ url_for('logout') }}" class="nav-logout">LOGOUT</a>
     {% endif %}
 </div>
-    <div class="main-card">
-        <h1>AVAILABLE <span>FLIGHTS</span></h1>
 
-        {% if flights %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Route</th>
-                    <th>Departure</th>
-                    <th>Landing</th>
-                    <th>Economy</th>
-                    <th>Business</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for f in flights %}
-                <tr>
-                    <td class="code">{{ f.origin_code }} ✈ {{ f.destination_code }}</td>
-                    <td>{{ f.departure_time }}</td>
-                    <td>{{ f.landing_time }}</td>
+<div class="main-card">
+    <h1>Available <span>Flights</span></h1>
 
-                    <td>
-    <a href="{{ url_for('select_seats', flight_id=f.flight_id, department_type='Economy', passengers=passengers, price=f.price_economy) }}" class="price-btn">
-        <span class="price-label">Select</span>
-        <span class="price-val">${{ f.price_economy }}</span>
-    </a>
-</td>
-
-<td>
-    {% if f.has_business %}
-        <a href="{{ url_for('select_seats', flight_id=f.flight_id, department_type='Business', passengers=passengers, price=f.price_business) }}" class="price-btn">
-            <span class="price-label">Select</span>
-            <span class="price-val">${{ f.price_business }}</span>
-        </a>
-    {% else %}
-        <div style="opacity: 0.2; font-size: 0.8rem;">-</div>
-    {% endif %}
-</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <div class="no-flights">NO FLIGHTS MATCH YOUR CRITERIA</div>
-        {% endif %}
+    <div style="margin-bottom: 30px; display: inline-block; background: rgba(255, 255, 255, 0.05); padding: 10px 25px; border-radius: 50px; border: 1px solid rgba(255, 134, 0, 0.3);">
+        <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.7;">Flight Date:</span>
+        <span style="color: var(--accent-orange); font-weight: 800; margin-left: 10px; font-size: 1.1rem;">
+            {{date}}
+        </span>
     </div>
+    {% if flights %}
+    <table>
+        <thead>
+            <tr>
+                <th>Route</th>
+                <th>Departure</th>
+                <th>Landing</th>
+                <th>Economy</th>
+                <th>Business</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for f in flights %}
+            <tr>
+                <td class="code">{{ f.origin_code }} <span style="color: var(--accent-orange);">✈</span> {{ f.destination_code }}</td>
+                <td>{{ f.departure_time }}</td>
+                <td>{{ f.landing_time }}</td>
+
+                <td>
+                    <a href="{{ url_for('select_seats', flight_id=f.flight_id, department_type='Economy', passengers=passengers, price=f.price_economy) }}" class="price-btn">
+                        <span class="price-label">Select Economy</span>
+                        <span class="price-val">${{ f.price_economy }}</span>
+                    </a>
+                </td>
+
+                <td>
+                    {% if f.has_business %}
+                        <a href="{{ url_for('select_seats', flight_id=f.flight_id, department_type='Business', passengers=passengers, price=f.price_business) }}" class="price-btn" style="background: linear-gradient(45deg, #6a1b9a, #2E0249); border: 1px solid rgba(255,255,255,0.2);">
+                            <span class="price-label">Select Business</span>
+                            <span class="price-val">${{ f.price_business }}</span>
+                        </a>
+                    {% else %}
+                        <div style="opacity: 0.3; font-size: 0.8rem; font-style: italic;">Not Available</div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="no-flights">NO FLIGHTS MATCH YOUR CRITERIA</div>
+    {% endif %}
+</div>
+
 </body>
 </html>

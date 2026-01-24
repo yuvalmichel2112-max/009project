@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FlyTAU | Booking History</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-plum: #2E0249;
+            --mid-plum: #6a1b9a;
+            --vibrant-orange: #FF6B00;
+            --dark-purple: #1a091d;
+            --accent-orange: #FF8C00;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(-45deg, var(--deep-plum), var(--mid-plum), var(--vibrant-orange), var(--dark-purple));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .management-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 1000px;
+            min-height: 500px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #fff, var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        .btn-nav {
+            text-decoration: none;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px dashed rgba(255, 255, 255, 0.5);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: 0.3s;
+        }
+
+        .btn-nav:hover {
+            border-color: var(--accent-orange);
+            color: var(--accent-orange);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { background: rgba(46, 2, 73, 0.6); color: var(--accent-orange); padding: 15px; text-transform: uppercase; font-size: 0.8rem; text-align: center; }
+        td { padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); text-align: center; font-size: 0.95rem; }
+
+        .status-tag {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .status-active { background: rgba(0, 255, 127, 0.2); color: #00ff7f; border: 1px solid #00ff7f; }
+        .status-cancelled { background: rgba(255, 0, 127, 0.2); color: #ff007f; border: 1px solid #ff007f; }
+        .status-default { background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid white; }
+
+        .empty-history { text-align: center; padding: 60px; font-size: 1.5rem; font-weight: 700; color: rgba(255,255,255,0.6); }
+    </style>
+</head>
+<body>
+
+    <div class="management-card">
+        <h2>YOUR BOOKING HISTORY</h2>
+
+        <div class="header-actions">
+            <a href="/booking_management" class="btn-nav">← Back to Active Flights</a>
+
+            <div style="font-weight: 600;">Account: <span style="color: var(--accent-orange);">{{ session['customer_email'] }}</span></div>
+
+            <a href="{{ url_for('logout') }}" class="btn-nav" style="border-style: solid; border-color: var(--vibrant-orange);">Logout</a>
+        </div>
+
+        {% if history %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Booking #</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Booking Date</th>
+                        <th>Tickets</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in history %}
+                    <tr>
+                        <td style="font-weight: 800;">#{{ h.booking_id }}</td>
+                        <td>{{ h.origin_city }}</td>
+                        <td>{{ h.destination_city }}</td>
+                        <td>{{ h.Booking_date.strftime('%d/%m/%Y') }}</td>
+                        <td>{{ h.num_tickets }}</td>
+                        <td>
+                            <span class="status-tag
+                                {% if h.booking_status == 'Active' %}status-active
+                                {% elif 'cancel' in h.booking_status.lower() %}status-cancelled
+                                {% else %}status-default{% endif %}">
+                                {{ h.booking_status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-history">
+                No booking history found.
+            </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>

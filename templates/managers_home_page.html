@@ -7,10 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --vibrant-red: #FF3B30;
-            --deep-red: #B71C1C;
-            --text-dark: #1D1D1F;
-            --glass-white: rgba(255, 240, 245, 0.5);
+            --mgr-pink: #FF007F;
+            --mgr-red: #D2042D;
+            --dark-bg: #1a091d;
+            --glass-card: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.2);
         }
 
         body, html {
@@ -18,14 +19,14 @@
             padding: 0;
             min-height: 100vh;
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(-45deg, #FFECF1, #F48FB1, #D32F2F, #8E0000);
+            background: linear-gradient(-45deg, var(--dark-bg), #2E0249, var(--mgr-red), var(--mgr-pink));
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
-            color: var(--text-dark);
+            color: #fff;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            padding: 50px 20px;
+            align-items: center;
+            padding: 20px;
         }
 
         @keyframes gradientBG {
@@ -35,13 +36,13 @@
         }
 
         .dashboard-container {
-            width: 95%;
-            max-width: 900px;
-            background: var(--glass-white);
-            padding: 60px 50px;
+            width: 100%;
+            max-width: 1000px;
+            background: var(--glass-card);
+            padding: 50px;
             border-radius: 40px;
-            border: 2px solid rgba(255, 59, 48, 0.3);
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
         }
@@ -54,29 +55,21 @@
         h1 {
             font-family: 'Montserrat', sans-serif;
             font-weight: 900;
-            font-size: 2.8rem;
-            color: var(--text-dark);
+            font-size: 3rem;
             margin: 0;
-            letter-spacing: -1px;
+            background: linear-gradient(to right, #fff, var(--mgr-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-transform: uppercase;
         }
 
         h2 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
-            color: var(--deep-red);
-            margin-top: 10px;
-            opacity: 0.8;
-            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 5px;
+            letter-spacing: 2px;
             text-transform: uppercase;
-        }
-
-        .section-divider {
-            border: 0;
-            height: 1px;
-            background: linear-gradient(to right, transparent, var(--vibrant-red), transparent);
-            margin: 40px 0;
-            opacity: 0.3;
         }
 
         .grid-layout {
@@ -85,11 +78,11 @@
             gap: 40px;
         }
 
-        h3 {
+        .mgmt-section h3 {
             font-family: 'Montserrat', sans-serif;
             font-weight: 800;
-            font-size: 1rem;
-            color: var(--text-dark);
+            font-size: 1.1rem;
+            color: var(--mgr-pink);
             text-transform: uppercase;
             letter-spacing: 1.5px;
             margin-bottom: 25px;
@@ -97,15 +90,12 @@
             align-items: center;
         }
 
-        h3::before {
+        .mgmt-section h3::after {
             content: '';
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: var(--vibrant-red);
-            margin-right: 12px;
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--vibrant-red);
+            flex-grow: 1;
+            height: 1px;
+            background: rgba(255, 0, 127, 0.3);
+            margin-left: 15px;
         }
 
         .link-list {
@@ -116,125 +106,100 @@
 
         .action-link {
             text-decoration: none;
-            color: var(--text-dark);
-            background: rgba(255, 255, 255, 0.7);
-            padding: 18px 25px;
-            border-radius: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 16px 20px;
+            border-radius: 15px;
             font-weight: 700;
-            font-size: 0.95rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .action-link:hover {
-            background: var(--vibrant-red);
-            color: white;
-            transform: scale(1.03) translateX(5px);
-            box-shadow: 0 10px 25px rgba(255, 59, 48, 0.3);
+            background: linear-gradient(45deg, var(--mgr-red), var(--mgr-pink));
+            transform: scale(1.03) translateX(8px);
+            box-shadow: 0 10px 20px rgba(210, 4, 45, 0.3);
             border-color: transparent;
+            color: #fff;
         }
 
         .action-link span {
-            font-size: 1.4rem;
-            font-weight: 400;
+            font-size: 1.2rem;
+            opacity: 0.7;
         }
 
-        /* סגנון מיוחד לדוחות */
-        .report-link {
-            border-left: 5px solid var(--vibrant-red);
+        .logout-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
         }
 
-        .report-link:hover {
-            border-left-color: white;
+        .logout-btn {
+            background-color: var(--mgr-pink);
+            color: white;
+            border: 2px solid var(--mgr-red);
+            padding: 8px 18px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            box-shadow: 0 4px 15px rgba(210, 4, 45, 0.3);
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            transform: scale(1.05);
+            background-color: var(--mgr-red);
         }
 
         @media (max-width: 768px) {
             .grid-layout { grid-template-columns: 1fr; }
-            .dashboard-container { padding: 40px 25px; }
-            h1 { font-size: 2rem; }
+            .dashboard-container { padding: 30px; }
+            h1 { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
-<div style="position: absolute; top: 20px; right: 20px; z-index: 1000;">
-    {% if session.get('managers_ID') %}
-        <a href="{{ url_for('logout') }}"
-           style="background-color: #FF007F;
-                  color: white;
-                  border: 2px solid #D2042D;
-                  padding: 8px 18px;
-                  text-decoration: none;
-                  border-radius: 25px;
-                  font-weight: 800;
-                  font-family: 'Montserrat', sans-serif;
-                  box-shadow: 0 4px 15px rgba(210, 4, 45, 0.3);
-                  transition: 0.3s;
-                  font-size: 0.75rem;">
-           Logout
-        </a>
-    {% elif session.get('customer_email') %}
-        <a href="{{ url_for('logout') }}"
-           style="background-color: #FF6B00;
-                  color: white;
-                  border: 2px solid #2E0249;
-                  padding: 8px 18px;
-                  text-decoration: none;
-                  border-radius: 25px;
-                  font-weight: 800;
-                  font-family: 'Montserrat', sans-serif;
-                  box-shadow: 0 4px 15px rgba(46, 2, 73, 0.3);
-                  transition: 0.3s;
-                  font-size: 0.75rem;">
-           Logout
-        </a>
+
+<div class="logout-container">
+    {% if session.get('managers_ID') or session.get('customer_email') %}
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
     {% endif %}
 </div>
+
 <div class="dashboard-container">
     <div class="welcome-section">
         <h1>Hello {{name}}</h1>
-        <h2>Flight & Analytics Dashboard</h2>
+        <h2>Flight & Analytics Command Center</h2>
     </div>
 
-    <div class="section-divider"></div>
-
     <div class="grid-layout">
-
         <div class="mgmt-section">
-            <h3>Flights Management</h3>
+            <h3>Fleet & Crew</h3>
             <div class="link-list">
-                <a href="/add_a_new_flight" class="action-link">
-                    Add A New Flight <span>+</span>
-                </a>
-                <a href="/cancel_flight" class="action-link">
-                    Cancel Active Flight <span>×</span>
-                </a>
-                <a href="/add_a_new_flight_attendant" class="action-link">
-                    Add A New Flight Attendant <span>+</span>
-                </a>
-                <a href="/add_a_new_pilot" class="action-link">
-                    Add A New Pilot <span>+</span>
-                </a>
-                <a href="/add_a_new_airplane" class="action-link">
-                    Add A New Airplane <span>+</span>
-                </a>
+                <a href="/add_flight" class="action-link">Add A New Flight <span>✈</span></a>
+                <a href="/cancel_flight" class="action-link">Cancel Active Flight <span>⊘</span></a>
+                <a href="/add_new_flight_attendant" class="action-link">Add New Attendant <span>+</span></a>
+                <a href="/add_new_pilot" class="action-link">Add New Pilot <span>+</span></a>
+                <a href="/add_new_airplane" class="action-link">Add New Airplane <span>+</span></a>
             </div>
         </div>
 
         <div class="mgmt-section">
-            <h3>Management Reports</h3>
+            <h3>Strategic Reports</h3>
             <div class="link-list">
-                <a href="report1" class="action-link report-link">Global Occupancy</a>
-                <a href="report2" class="action-link report-link">Revenue Analytics</a>
-                <a href="report3" class="action-link report-link">Employee Flight Hours</a>
-                <a href="report4" class="action-link report-link">Cancellation Rates</a>
-                <a href="report5" class="action-link report-link">Top Popular Destinations</a>
+                <a href="report1" class="action-link" style="border-left: 4px solid var(--mgr-pink);">Global Occupancy <span>📊</span></a>
+                <a href="report2" class="action-link" style="border-left: 4px solid var(--mgr-pink);">Revenue Analytics <span>💰</span></a>
+                <a href="report3" class="action-link" style="border-left: 4px solid var(--mgr-pink);">Employee Flight Hours <span>⏱</span></a>
+                <a href="report4" class="action-link" style="border-left: 4px solid var(--mgr-pink);">Cancellation Rates <span>📉</span></a>
+                <a href="report5" class="action-link" style="border-left: 4px solid var(--mgr-pink);">Top Destinations <span>🌟</span></a>
             </div>
         </div>
-
     </div>
 </div>
 

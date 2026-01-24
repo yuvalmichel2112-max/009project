@@ -2,9 +2,206 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>FlyTAU | Admin - Add Attendant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mgr-pink: #FF007F;
+            --mgr-red: #D2042D;
+            --dark-bg: #1a091d;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(-45deg, var(--dark-bg), #2E0249, var(--mgr-red), var(--mgr-pink));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .form-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 850px; /* הרחבה לצדדים */
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, var(--mgr-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .btn-nav {
+            text-decoration: none;
+            color: white;
+            border: 1px dashed rgba(255, 255, 255, 0.4);
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-nav:hover {
+            border-color: var(--mgr-pink);
+            color: var(--mgr-pink);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .full-width { grid-column: span 2; }
+
+        .input-group { display: flex; flex-direction: column; }
+
+        label { font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; color: rgba(255,255,255,0.8); }
+
+        input, select {
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--mgr-pink);
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+        }
+
+        .submit-btn {
+            grid-column: span 2;
+            padding: 16px;
+            background: linear-gradient(45deg, var(--mgr-red), var(--mgr-pink));
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 1rem;
+            text-transform: uppercase;
+            margin-top: 10px;
+            box-shadow: 0 8px 20px rgba(210, 4, 45, 0.3);
+            transition: 0.4s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(255, 0, 127, 0.5);
+        }
+
+        select option {
+            background-color: #2E0249;
+            color: white;
+        }
+
+        .alert { padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px; font-weight: 600; }
+        .alert-success { background: rgba(0, 255, 127, 0.2); border: 1px solid #00ff7f; color: #00ff7f; }
+        .alert-error { background: rgba(255, 0, 0, 0.2); border: 1px solid #ff4d4d; color: #ff4d4d; }
+    </style>
 </head>
 <body>
+
+<div class="form-card">
+    <div class="header-section">
+        <a href="/managers_home_page" class="btn-nav">← Dashboard</a>
+        <h2>Add Attendant</h2>
+        <a href="{{ url_for('logout') }}" class="btn-nav" style="border-style: solid; border-color: var(--mgr-pink);">Logout</a>
+    </div>
+
+    {% if message %}
+        <div class="alert alert-{{ message.type }}">{{ message.text }}</div>
+    {% endif %}
+
+    <form action="/add_a_new_flight_attendant" method="POST" class="input-grid">
+        <div class="input-group">
+            <label>Attendant ID</label>
+            <input type="number" name="id" required placeholder="Employee ID">
+        </div>
+
+        <div class="input-group">
+            <label>Employment Start</label>
+            <input type="date" name="start_date" required>
+        </div>
+
+        <div class="input-group">
+            <label>First Name</label>
+            <input type="text" name="first_name" required>
+        </div>
+
+        <div class="input-group">
+            <label>Last Name</label>
+            <input type="text" name="last_name" required>
+        </div>
+
+        <div class="input-group">
+            <label>Phone Number</label>
+            <input type="number" name="phone" required>
+        </div>
+
+        <div class="input-group">
+            <label>City</label>
+            <input type="text" name="city">
+        </div>
+
+        <div class="input-group">
+            <label>Street</label>
+            <input type="text" name="street">
+        </div>
+
+        <div class="input-group">
+            <label>Street Number</label>
+            <input type="number" name="street_num">
+        </div>
+
+        <div class="input-group full-width">
+            <label>Long Flight Training</label>
+            <select name="training">
+                <option value="yes">Certified (Yes)</option>
+                <option value="no">Not Certified (No)</option>
+            </select>
+        </div>
+
+        <button type="submit" class="submit-btn">Register Flight Attendant</button>
+    </form>
+</div>
 
 </body>
 </html>
