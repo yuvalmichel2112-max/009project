@@ -15,6 +15,7 @@ import json
 app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
+app.secret_key = 'your_secret_key_here'
 
 @app.route("/", methods=["GET", "POST"])
 def home_page():
@@ -210,6 +211,10 @@ def booking_history():
 
 @app.route("/choose_flight", methods = ["GET", "POST"])
 def choose_flight():
+    print(f"Current Session: {session}")
+    print(f"Is Admin in session? {session.get('is_admin')}")
+    if session.get('is_admin'):
+        return redirect(url_for('managers_home_page', error="admin_forbidden"))
     sync_flight_statuses()
     if not request.args.get('origin_city'):
         return redirect(url_for('search_flights'))
@@ -410,7 +415,9 @@ def managers_log_in():
             cursor.execute(query, (manager_id, manager_pass))
             manager = cursor.fetchone()
             if manager:
+                session["is_admin"] = True
                 session["managers_ID"] = manager_id
+                print(f"DEBUG: Admin logged in! Session status: {session.get('is_admin')}")
                 return redirect("/managers_home_page")
             else:
                 return render_template("managers_log_in.html", error="ID or Password incorrect")
