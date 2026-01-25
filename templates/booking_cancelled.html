@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FlyTAU | Cancellation Confirmed</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-plum: #2E0249;
+            --mid-plum: #6a1b9a;
+            --vibrant-orange: #FF6B00;
+            --dark-purple: #1a091d;
+            --accent-orange: #FF8C00;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(-45deg, var(--deep-plum), var(--mid-plum), var(--vibrant-orange), var(--dark-purple));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .success-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 50px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .icon-box {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 107, 0, 0.2);
+            border: 2px solid var(--vibrant-orange);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 30px;
+            font-size: 40px;
+            color: var(--vibrant-orange);
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .info-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: left;
+            border-left: 4px solid var(--vibrant-orange);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .info-label { opacity: 0.7; font-weight: 400; }
+        .info-value { font-weight: 700; color: #fff; }
+
+        .fee-highlight {
+            font-size: 1.3rem;
+            color: #ff4d4d;
+            font-weight: 800;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 15px;
+            margin-top: 10px;
+        }
+
+        .nav-btn {
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(45deg, var(--mid-plum), var(--deep-plum));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 15px 40px;
+            border-radius: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            transition: 0.3s;
+            margin-top: 20px;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border-color: var(--accent-orange);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="success-card">
+        <div class="icon-box">✓</div>
+        <h2>Cancellation Confirmed</h2>
+        <p>Your booking has been successfully cancelled. A confirmation email will be sent shortly.</p>
+
+        <div class="info-container">
+    <div class="info-row">
+        <span class="info-label">Booking ID:</span>
+        <span class="info-value">#{{ booking_id }}</span>
+    </div>
+
+    <div style="background: rgba(255, 107, 0, 0.1); border-left: 4px solid var(--vibrant-orange); padding: 20px; border-radius: 12px; margin-top: 25px; text-align: left;">
+        <p style="margin: 0; font-size: 0.95rem; line-height: 1.6; font-weight: 500;">
+            <strong style="color: var(--vibrant-orange); display: block; margin-bottom: 5px; text-transform: uppercase;">Cancellation Policy:</strong>
+            Please note that a <strong>5% cancellation fee</strong> will be charged based on the total booking value. This fee is non-refundable and will be deducted from your total refund amount.
+        </p>
+    </div>
+</div>
+
+        <a href="/booking_management" class="nav-btn">Back to My Trips</a>
+    </div>
+
+</body>
+</html>
