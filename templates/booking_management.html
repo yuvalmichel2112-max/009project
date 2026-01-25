@@ -182,7 +182,7 @@
                 ATTENTION: A 5% cancellation fee will be charged.
             </p>
 
-            <form action="/perform_final_cancel" method="POST" class="modal-btns">
+            <form action="/booking_cancelled" method="POST" class="modal-btns">
                 <input type="hidden" name="booking_id" value="{{ booking_id_to_cancel }}">
                 <button type="submit" class="btn-confirm">YES, CANCEL</button>
                 <button type="button" class="btn-close" onclick="closeModal()">NO, GO BACK</button>

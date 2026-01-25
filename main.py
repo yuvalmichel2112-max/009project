@@ -172,14 +172,14 @@ def cancel_order_check(booking_id):
         return booking_management(error=f"Cannot cancel: Flight departs in less than 36 hours.")
     return booking_management(show_modal=True, booking_id_to_cancel=booking_id)
 
-@app.route('/perform_final_cancel', methods=['POST'])
+@app.route('/booking_cancelled', methods=['POST'])
 def perform_final_cancel():
     booking_id = request.form.get('booking_id')
     try:
         with db_cur() as cursor:
             cursor.execute("UPDATE Booking SET Status = 'customer cancellation' WHERE ID = %s", (booking_id,))
             cursor.execute("UPDATE Ticket SET Price = Price * 0.05 WHERE Booking_ID = %s", (booking_id,))
-        return render_template('cancel_booking_success.html', booking_id=booking_id)
+        return render_template('booking_cancelled.html', booking_id=booking_id)
     except Exception as e:
         return f"Database Error: {e}"
 
@@ -210,7 +210,7 @@ def booking_history():
     return render_template('booking_history.html', history=history_results)
 
 @app.route("/choose_flight", methods = ["GET", "POST"])
-def choose_flight():
+def choose_booking():
     print(session)
     if session.get('is_admin'):
         return redirect(url_for('managers_home_page', error="admin_forbidden"))
@@ -783,7 +783,7 @@ def perform_cancel():
                 UPDATE Booking SET Status = 'system cancellation' 
                 WHERE ID IN (SELECT Booking_ID FROM Ticket WHERE Flight_ID = %s)""", (flight_id,))
             cursor.execute("UPDATE Ticket SET Price = 0 WHERE Flight_ID = %s", (flight_id,))
-        return render_template('cancel_booking_success.html',
+        return render_template('perform_cancel.html',
                                flight_id=flight_id,
                                report=refund_report,
                                total_sum=total_flight_sum)
