@@ -13,10 +13,10 @@ from matplotlib.ticker import FuncFormatter
 import json
 
 app = Flask(__name__)
-# app.config['SESSION_TYPE'] = 'filesystem'
-# Session(app)
+app.config['SESSION_TYPE'] = 'filesystem'
 app.secret_key = 'your_secret_key_here'
 
+#This function shows the home page and lets registered customers log in with their email and password.
 @app.route("/", methods=["GET", "POST"])
 def home_page():
     if request.method == "POST":
@@ -34,6 +34,7 @@ def home_page():
             return render_template("home_page.html", error="Incorrect email or password")
     return render_template("home_page.html")
 
+#This function allows new users to create an account by saving their personal and contact details.
 @app.route("/sign_up", methods=["POST", "GET"])
 def sign_up():
     if request.method == "POST":
@@ -57,15 +58,16 @@ def sign_up():
                            (registered_email, registered_password, date_of_birth, registration_date, passport_number))
             query3 = "INSERT INTO Customer_phone_number(Customer_Email, Phone_number) VALUES (%s, %s)"
             for phone in phones_list:
-                if phone.strip():  # מוודא שהטלפון לא ריק
+                if phone.strip():
                     cursor.execute(query3, (registered_email, phone))
         session["customer_email"] = registered_email
         return redirect("/search_flights")
     return render_template("sign_up.html")
 
+#This function handles the flight search form and makes sure the user picks different locations and a valid date.
 @app.route("/search_flights", methods=["GET", "POST"])
 def search_flights():
-    if session.get("customer_type") != "registered":
+    if session.get("customer_type") != "registered" and not session.get("is_admin"):
         session.clear()
     today = date.today().strftime('%Y-%m-%d')
     if request.method == "POST":
@@ -98,11 +100,13 @@ def search_flights():
     locations = get_all_locations()
     return render_template("search_flights.html", locations=locations, today=today)
 
+#This function logs the user out by clearing all information from the current session.
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("home_page"))
 
+#This function shows a list of upcoming active trips for the logged-in customer or guest.
 @app.route('/booking_management')
 def booking_management(error=None, show_modal=False, booking_id_to_cancel=None):
     customer_email = session.get('customer_email') or session.get('temp_guest_email')
@@ -135,6 +139,7 @@ def booking_management(error=None, show_modal=False, booking_id_to_cancel=None):
                            show_modal=show_modal,
                            booking_id_to_cancel=booking_id_to_cancel)
 
+#This function lets guests access their orders by entering the email address they used for the booking.
 @app.route('/identify_guest', methods=['GET', 'POST'])
 def identify_guest():
     if request.method == 'POST':
@@ -150,6 +155,7 @@ def identify_guest():
             return render_template('identify_guest.html', error="No bookings found for this email address.")
     return render_template('identify_guest.html')
 
+#This function checks if a customer can cancel a flight, which is only allowed more than 36 hours before departure.
 @app.route('/cancel_order/<int:booking_id>')
 def cancel_order_check(booking_id):
     customer_email = session.get('customer_email')
@@ -172,6 +178,7 @@ def cancel_order_check(booking_id):
         return booking_management(error=f"Cannot cancel: Flight departs in less than 36 hours.")
     return booking_management(show_modal=True, booking_id_to_cancel=booking_id)
 
+#This function finalizes the cancellation in the database and applies a 5% fee to the ticket price.
 @app.route('/booking_cancelled', methods=['POST'])
 def perform_final_cancel():
     booking_id = request.form.get('booking_id')
@@ -183,6 +190,7 @@ def perform_final_cancel():
     except Exception as e:
         return f"Database Error: {e}"
 
+#This function displays the full history of all active, past and cancelled bookings for the user.
 @app.route('/booking_history')
 def booking_history():
     customer_email = session.get('customer_email')
@@ -209,8 +217,9 @@ def booking_history():
         history_results = cursor.fetchall()
     return render_template('booking_history.html', history=history_results)
 
+#This function displays all available flights that match the user's search criteria like origin, destination and date.
 @app.route("/choose_flight", methods = ["GET", "POST"])
-def choose_booking():
+def choose_flight():
     print(session)
     if session.get('is_admin'):
         return redirect(url_for('managers_home_page', error="admin_forbidden"))
@@ -255,6 +264,7 @@ def choose_booking():
                                date=date_from_url,
                                passengers=passengers)
 
+#This function shows the airplane seat map and lets the user pick their preferred seats for the flight.
 @app.route('/select_seats/<int:flight_id>/<department_type>', methods=['GET', 'POST'])
 def select_seats(flight_id, department_type):
     price_from_url = request.args.get('price')
@@ -277,6 +287,7 @@ def select_seats(flight_id, department_type):
                            occupied=occupied,
                            num_passengers=num_passengers)
 
+#This function shows the passenger's details and asks for any missing information before finishing the booking.
 @app.route("/details_for_customer")
 def details_for_customer():
     if 'selected_seats' not in session:
@@ -300,6 +311,7 @@ def details_for_customer():
                 customer_info['phones_list'] = [p['Phone_number'] for p in phones_result]
     return render_template("details_for_customer.html", customer=customer_info)
 
+#This function collects the passenger's info from the form and saves it temporarily to the session.
 @app.route('/submit-booking', methods=['POST'])
 def submit_booking():
     if 'flight_id' not in session:
@@ -336,6 +348,7 @@ def submit_booking():
             return f"Error creating guest profile: {e}"
     return redirect(url_for('booking_summary'))
 
+#This function shows a summary of the selected tickets, passenger info, and the total price to pay.
 @app.route('/booking_summary')
 def booking_summary():
     if 'selected_seats' not in session or 'booking_temp_data' not in session:
@@ -367,6 +380,7 @@ def booking_summary():
     session['total_order_amount'] = total_amount
     return render_template('booking_summary.html', tickets=tickets, passenger=passenger, total_amount=total_amount)
 
+#This function saves the booking and tickets to the database and shows a final confirmation message.
 @app.route('/final_confirm', methods=['POST'])
 def final_confirm():
     tickets = session.get('final_tickets')
@@ -404,6 +418,7 @@ def final_confirm():
                                tickets=tickets,
                                passenger=passenger)
 
+#This function allows managers to log in to the system using their unique ID and password.
 @app.route("/managers_log_in", methods=["GET", "POST"])
 def managers_log_in():
     if request.method == "POST":
@@ -421,6 +436,7 @@ def managers_log_in():
                 return render_template("managers_log_in.html", error="ID or Password incorrect")
     return render_template("managers_log_in.html")
 
+#This function displays the main dashboard for managers after they successfully log in.
 @app.route("/managers_home_page", methods=["GET"])
 @admin_required
 def managers_home_page():
@@ -439,7 +455,7 @@ def managers_home_page():
             return render_template("managers_home_page.html", name=manager_first_name)
     return redirect("/managers_log_in")
 
-
+#This function creates a report showing the percentage of occupied versus empty seats on completed flights.
 @app.route('/report1')
 @admin_required
 def report1_page():
@@ -475,6 +491,7 @@ def report1_page():
                            graph_image=f'images/{image_filename}',
                            percentage=occupancy_rate)
 
+#This function shows a revenue report based on airplane types and different seating classes.
 @app.route('/report2')
 @admin_required
 def report2_page():
@@ -520,6 +537,7 @@ def report2_page():
 
     return render_template('report2.html', graph_image=f'images/{image_filename}')
 
+#This function compares the total flight hours for pilots and flight attendants to track their work time.
 @app.route('/report3')
 @admin_required
 def report3_page():
@@ -566,6 +584,7 @@ def report3_page():
     plt.close()
     return render_template('report3.html', graph_image=f'images/{image_filename}')
 
+#This function creates a graph that shows the monthly trend of how many bookings were cancelled.
 @app.route('/report4')
 @admin_required
 def report4_page():
@@ -599,6 +618,7 @@ def report4_page():
     plt.close()
     return render_template('report4.html', graph_image=f'images/{image_filename}')
 
+#This function displays a list of the top three most popular flight destinations.
 @app.route('/report5')
 @admin_required
 def report5_page():
@@ -624,7 +644,7 @@ def report5_page():
             })
     return render_template('report5.html', destinations=destinations_data)
 
-
+#This function allows a manager to add a new pilot and their employment details to the system.
 @app.route('/add_new_pilot', methods=['GET', 'POST'])
 @admin_required
 def add_pilot_page():
@@ -654,7 +674,7 @@ def add_pilot_page():
             message = {"type": "error", "text": f"Error adding pilot: {e}"}
     return render_template('add_new_pilot.html', message=message)
 
-
+#This function allows a manager to register a new flight attendant in the database.
 @app.route('/add_new_flight_attendant', methods=['GET', 'POST'])
 @admin_required
 def add_attendant_page():
@@ -689,6 +709,7 @@ def add_attendant_page():
             message = {"type": "error", "text": f"Error adding attendant: {e}"}
     return render_template('add_new_flight_attendant.html', message=message)
 
+#This function lets managers add a new airplane and define its seating sections like Economy or Business.
 @app.route('/add_new_airplane', methods=['GET', 'POST'])
 @admin_required
 def add_airplane_page():
@@ -723,6 +744,7 @@ def add_airplane_page():
             message = {"type": "error", "text": f"Error adding airplane: {e}"}
     return render_template('add_new_airplane.html', message=message)
 
+#This function checks if a manager can cancel a flight, which must be done at least 72 hours before takeoff.
 @app.route('/cancel_flight', methods=['GET', 'POST'])
 @admin_required
 def cancel_flight_page():
@@ -757,6 +779,7 @@ def cancel_flight_page():
                            show_modal=show_modal,
                            flight_id=flight_id)
 
+#This function cancels a flight, updates all related bookings to zero price, and shows a refund report.
 @app.route('/perform_cancel', methods=['POST'])
 @admin_required
 def perform_cancel():
@@ -790,6 +813,7 @@ def perform_cancel():
     except Exception as e:
         return f"Management System Error: {e}"
 
+#This is the first step for adding a new flight where the manager chooses the route, date, and prices.
 @app.route('/add_flight', methods=['GET', 'POST'])
 @admin_required
 def add_flight_step1():
@@ -817,7 +841,7 @@ def add_flight_step1():
                            airports=airports,
                            routes_json=json.dumps(routes_data))
 
-
+#This is the second step where the manager selects an available aircraft and the required crew for the flight.
 @app.route('/add_flight_step2', methods=['GET', 'POST'])
 @admin_required
 def add_flight_step2():
@@ -899,6 +923,7 @@ def add_flight_step2():
                            req=current_req,
                            flight_data=flight_info)
 
+#This function saves the new flight and its assigned crew to the database to finish the process.
 @app.route('/create_flight_final')
 @admin_required
 def create_flight_final():

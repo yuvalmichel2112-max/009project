@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from functools import wraps
 from flask import  session, redirect
 
+#This function creates a connection to the FlyTAU database using the required login information.
 def mydb():
     return mysql.connector.connect(
         host="localhost",
@@ -13,7 +14,7 @@ def mydb():
         autocommit=True
         )
 
-
+#This function manages the database cursor and ensures the connection is closed after a task is finished.
 @contextmanager
 def db_cur():
     conn = mydb()
@@ -24,7 +25,7 @@ def db_cur():
         cursor.close()
         conn.close()
 
-
+#This function determines if a flight offers Business class or only Economy based on the aircraft size.
 def get_flight_dept(flight_id):
     with db_cur() as cursor:
         query = """SELECT a.size AS airplane_size 
@@ -37,7 +38,7 @@ def get_flight_dept(flight_id):
             flight_dept.append('Business')
         return flight_dept
 
-
+#This function calculates the arrival time and formats the departure and landing times for display.
 def get_time_display(departure_time, duration):
     if not departure_time or duration is None:
         return "--:--", "--:--"
@@ -49,7 +50,7 @@ def get_time_display(departure_time, duration):
         landing_display += f" (+{days_diff} day)"
     return departure_display, landing_display
 
-
+#This function retrieves the number of rows and columns for a specific seating section on a plane.
 def get_department_dimensions(flight_id, department_type):
     with db_cur() as cursor:
         query = """SELECT d.Number_of_rows, d.Number_of_columns 
@@ -64,7 +65,7 @@ def get_department_dimensions(flight_id, department_type):
             return result[0], result[1]
         return 0, 0
 
-
+#This function returns a list of all seats that are already taken and paid for on a specific flight.
 def get_occupied_seats(flight_id, department_type):
     with db_cur() as cursor:
         query = """
@@ -86,14 +87,14 @@ def get_occupied_seats(flight_id, department_type):
                 occupied.append(f"{seat[0]}-{seat[1]}")
         return occupied
 
-
+#This function provides a list of all cities and countries where the airline operates.
 def get_all_locations():
     with db_cur() as cursor:
         cursor.execute("SELECT DISTINCT city, country FROM airport")
         locations =  cursor.fetchall()
         return locations
 
-
+#This function fetches all saved details and phone numbers for a registered customer using their email.
 def get_reg_cus_info(email):
     if not email:
         return None
@@ -113,7 +114,7 @@ def get_reg_cus_info(email):
         customer_data['phones_list'] = [row['Phone_number'] for row in phones_result]
         return customer_data
 
-
+#This function adds a temporary guest profile to the database so they can book a flight without an account.
 def add_guest_to_db(first_name, last_name, email, phone_number):
     with db_cur() as cursor:
             cursor.execute("INSERT IGNORE INTO customer(First_name, Last_name, Customer_Email) VALUES (%s, %s, %s)",(first_name, last_name, email))
@@ -122,7 +123,7 @@ def add_guest_to_db(first_name, last_name, email, phone_number):
                 if phone:
                     cursor.execute("INSERT IGNORE INTO customer_phone_number(Customer_Email, Customer_phone_number) values (%s, %S)", (email, phone))
 
-
+#This function generates a new 4-digit ID and ensures it is unique by checking the database first.
 def generate_unique_id(table_name, column_name):
     with db_cur() as cursor:
         while True:
@@ -138,7 +139,7 @@ def generate_unique_id(table_name, column_name):
             if count == 0:
                 return new_id
 
-
+#This function finds the last destination of a pilot, attendant, or plane to know where they are currently.
 def get_last_location(cursor, table_link, id_column_name, resource_id):
     if table_link == 'Flight':
         sql = """
@@ -158,7 +159,7 @@ def get_last_location(cursor, table_link, id_column_name, resource_id):
     result = cursor.fetchone()
     return result[0] if result else None
 
-
+#This function looks for planes and crew members that are in the right city and ready for a new flight assignment.
 def get_available_resources(cursor, origin, destination, departure_str, plane_size):
     cursor.execute("SELECT Duration FROM Flight_Route WHERE origin_Airport_Code = %s AND destination_Airport_Code = %s",
                    (origin, destination))
@@ -197,7 +198,7 @@ def get_available_resources(cursor, origin, destination, departure_str, plane_si
         return {"error": f"there's not enough flight attendant {req['a']})"}
     return {"success": True, "data": available}
 
-
+#This function automatically marks flights as 'completed' once they land or 'fully booked' when all seats are sold.
 def sync_flight_statuses():
     try:
         with db_cur() as cursor:
@@ -226,6 +227,7 @@ def sync_flight_statuses():
     except Exception as e:
         print(f"Error updating statuses: {e}")
 
+#This is a security function that checks if the person trying to access a page is a manager.
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
